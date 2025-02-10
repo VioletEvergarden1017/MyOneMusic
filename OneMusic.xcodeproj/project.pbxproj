@@ -1,0 +1,496 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		953A0C982D5B15D700E9B05A /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 953A0C972D5B15D700E9B05A /* Launch Screen.storyboard */; };
+		953A0C9A2D5B1B0000E9B05A /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953A0C992D5B1B0000E9B05A /* MainTabView.swift */; };
+		953A0C9E2D5B1E7E00E9B05A /* TabButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953A0C9D2D5B1E7E00E9B05A /* TabButton.swift */; };
+		953A0CA22D5B2FAA00E9B05A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953A0CA12D5B2FAA00E9B05A /* HomeView.swift */; };
+		953A0CA42D5B3B3C00E9B05A /* ViewAllSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953A0CA32D5B3B3C00E9B05A /* ViewAllSection.swift */; };
+		95A72A582D5A3F3A007CBE8B /* OneMusicApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A72A552D5A3F3A007CBE8B /* OneMusicApp.swift */; };
+		95A72A592D5A3F3A007CBE8B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 95A72A512D5A3F3A007CBE8B /* Preview Assets.xcassets */; };
+		95A72A5A2D5A3F3A007CBE8B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 95A72A532D5A3F3A007CBE8B /* Assets.xcassets */; };
+		95A72A612D5A400E007CBE8B /* NotoSansSC-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 95A72A5F2D5A400D007CBE8B /* NotoSansSC-Medium.ttf */; };
+		95A72A622D5A400E007CBE8B /* NotoSansSC-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 95A72A5D2D5A400D007CBE8B /* NotoSansSC-Bold.ttf */; };
+		95A72A632D5A400E007CBE8B /* NotoSansSC-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 95A72A602D5A400D007CBE8B /* NotoSansSC-Regular.ttf */; };
+		95A72A642D5A400E007CBE8B /* NotoSansSC-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 95A72A5C2D5A400D007CBE8B /* NotoSansSC-Black.ttf */; };
+		95A72A652D5A400E007CBE8B /* NotoSansSC-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 95A72A5E2D5A400D007CBE8B /* NotoSansSC-Light.ttf */; };
+		95A72A6F2D5A497A007CBE8B /* UIExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A72A6E2D5A497A007CBE8B /* UIExtension.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		953A0C972D5B15D700E9B05A /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		953A0C992D5B1B0000E9B05A /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		953A0C9D2D5B1E7E00E9B05A /* TabButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabButton.swift; sourceTree = "<group>"; };
+		953A0CA12D5B2FAA00E9B05A /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		953A0CA32D5B3B3C00E9B05A /* ViewAllSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewAllSection.swift; sourceTree = "<group>"; };
+		95A72A402D5A3F0E007CBE8B /* OneMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OneMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		95A72A512D5A3F3A007CBE8B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		95A72A532D5A3F3A007CBE8B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		95A72A552D5A3F3A007CBE8B /* OneMusicApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneMusicApp.swift; sourceTree = "<group>"; };
+		95A72A5C2D5A400D007CBE8B /* NotoSansSC-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansSC-Black.ttf"; sourceTree = "<group>"; };
+		95A72A5D2D5A400D007CBE8B /* NotoSansSC-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansSC-Bold.ttf"; sourceTree = "<group>"; };
+		95A72A5E2D5A400D007CBE8B /* NotoSansSC-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansSC-Light.ttf"; sourceTree = "<group>"; };
+		95A72A5F2D5A400D007CBE8B /* NotoSansSC-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansSC-Medium.ttf"; sourceTree = "<group>"; };
+		95A72A602D5A400D007CBE8B /* NotoSansSC-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansSC-Regular.ttf"; sourceTree = "<group>"; };
+		95A72A672D5A4809007CBE8B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		95A72A6E2D5A497A007CBE8B /* UIExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIExtension.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		95A72A3D2D5A3F0E007CBE8B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		953A0C9F2D5B2F7500E9B05A /* Library */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Library;
+			sourceTree = "<group>";
+		};
+		953A0CA02D5B2F7E00E9B05A /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		95A72A372D5A3F0E007CBE8B = {
+			isa = PBXGroup;
+			children = (
+				95A72A562D5A3F3A007CBE8B /* OneMusic */,
+				95A72A412D5A3F0E007CBE8B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		95A72A412D5A3F0E007CBE8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				95A72A402D5A3F0E007CBE8B /* OneMusic.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		95A72A522D5A3F3A007CBE8B /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				95A72A512D5A3F3A007CBE8B /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		95A72A562D5A3F3A007CBE8B /* OneMusic */ = {
+			isa = PBXGroup;
+			children = (
+				95A72A702D5A5021007CBE8B /* Extension */,
+				95A72A6B2D5A48FF007CBE8B /* View */,
+				95A72A6A2D5A48D3007CBE8B /* ViewModel */,
+				95A72A692D5A48CE007CBE8B /* Model */,
+				95A72A682D5A48B7007CBE8B /* UICommon */,
+				95A72A662D5A4315007CBE8B /* Common */,
+				95A72A5B2D5A3FD5007CBE8B /* Fonts */,
+				95A72A522D5A3F3A007CBE8B /* Preview Content */,
+				95A72A532D5A3F3A007CBE8B /* Assets.xcassets */,
+				95A72A672D5A4809007CBE8B /* Info.plist */,
+				95A72A552D5A3F3A007CBE8B /* OneMusicApp.swift */,
+				953A0C972D5B15D700E9B05A /* Launch Screen.storyboard */,
+			);
+			path = OneMusic;
+			sourceTree = "<group>";
+		};
+		95A72A5B2D5A3FD5007CBE8B /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				95A72A5C2D5A400D007CBE8B /* NotoSansSC-Black.ttf */,
+				95A72A5D2D5A400D007CBE8B /* NotoSansSC-Bold.ttf */,
+				95A72A5E2D5A400D007CBE8B /* NotoSansSC-Light.ttf */,
+				95A72A5F2D5A400D007CBE8B /* NotoSansSC-Medium.ttf */,
+				95A72A602D5A400D007CBE8B /* NotoSansSC-Regular.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		95A72A662D5A4315007CBE8B /* Common */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		95A72A682D5A48B7007CBE8B /* UICommon */ = {
+			isa = PBXGroup;
+			children = (
+				953A0C9D2D5B1E7E00E9B05A /* TabButton.swift */,
+				953A0CA32D5B3B3C00E9B05A /* ViewAllSection.swift */,
+			);
+			path = UICommon;
+			sourceTree = "<group>";
+		};
+		95A72A692D5A48CE007CBE8B /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		95A72A6A2D5A48D3007CBE8B /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		95A72A6B2D5A48FF007CBE8B /* View */ = {
+			isa = PBXGroup;
+			children = (
+				953A0CA02D5B2F7E00E9B05A /* Settings */,
+				953A0C9F2D5B2F7500E9B05A /* Library */,
+				95A72A6D2D5A4913007CBE8B /* MainTab */,
+				95A72A6C2D5A4908007CBE8B /* Home */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		95A72A6C2D5A4908007CBE8B /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				953A0CA12D5B2FAA00E9B05A /* HomeView.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		95A72A6D2D5A4913007CBE8B /* MainTab */ = {
+			isa = PBXGroup;
+			children = (
+				953A0C992D5B1B0000E9B05A /* MainTabView.swift */,
+			);
+			path = MainTab;
+			sourceTree = "<group>";
+		};
+		95A72A702D5A5021007CBE8B /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				95A72A6E2D5A497A007CBE8B /* UIExtension.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		95A72A3F2D5A3F0E007CBE8B /* OneMusic */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 95A72A4E2D5A3F0E007CBE8B /* Build configuration list for PBXNativeTarget "OneMusic" */;
+			buildPhases = (
+				95A72A3C2D5A3F0E007CBE8B /* Sources */,
+				95A72A3D2D5A3F0E007CBE8B /* Frameworks */,
+				95A72A3E2D5A3F0E007CBE8B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OneMusic;
+			packageProductDependencies = (
+			);
+			productName = OneMusic;
+			productReference = 95A72A402D5A3F0E007CBE8B /* OneMusic.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		95A72A382D5A3F0E007CBE8B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1610;
+				LastUpgradeCheck = 1610;
+				TargetAttributes = {
+					95A72A3F2D5A3F0E007CBE8B = {
+						CreatedOnToolsVersion = 16.1;
+					};
+				};
+			};
+			buildConfigurationList = 95A72A3B2D5A3F0E007CBE8B /* Build configuration list for PBXProject "OneMusic" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 95A72A372D5A3F0E007CBE8B;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 95A72A412D5A3F0E007CBE8B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				95A72A3F2D5A3F0E007CBE8B /* OneMusic */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		95A72A3E2D5A3F0E007CBE8B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				95A72A592D5A3F3A007CBE8B /* Preview Assets.xcassets in Resources */,
+				95A72A612D5A400E007CBE8B /* NotoSansSC-Medium.ttf in Resources */,
+				953A0C982D5B15D700E9B05A /* Launch Screen.storyboard in Resources */,
+				95A72A622D5A400E007CBE8B /* NotoSansSC-Bold.ttf in Resources */,
+				95A72A632D5A400E007CBE8B /* NotoSansSC-Regular.ttf in Resources */,
+				95A72A642D5A400E007CBE8B /* NotoSansSC-Black.ttf in Resources */,
+				95A72A652D5A400E007CBE8B /* NotoSansSC-Light.ttf in Resources */,
+				95A72A5A2D5A3F3A007CBE8B /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		95A72A3C2D5A3F0E007CBE8B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				95A72A6F2D5A497A007CBE8B /* UIExtension.swift in Sources */,
+				953A0C9E2D5B1E7E00E9B05A /* TabButton.swift in Sources */,
+				95A72A582D5A3F3A007CBE8B /* OneMusicApp.swift in Sources */,
+				953A0CA42D5B3B3C00E9B05A /* ViewAllSection.swift in Sources */,
+				953A0CA22D5B2FAA00E9B05A /* HomeView.swift in Sources */,
+				953A0C9A2D5B1B0000E9B05A /* MainTabView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		95A72A4C2D5A3F0E007CBE8B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		95A72A4D2D5A3F0E007CBE8B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		95A72A4F2D5A3F0E007CBE8B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"OneMusic/Preview Content\"";
+				DEVELOPMENT_TEAM = 534XVWSWAY;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OneMusic/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Zhiye1017.OneMusic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		95A72A502D5A3F0E007CBE8B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"OneMusic/Preview Content\"";
+				DEVELOPMENT_TEAM = 534XVWSWAY;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OneMusic/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Zhiye1017.OneMusic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		95A72A3B2D5A3F0E007CBE8B /* Build configuration list for PBXProject "OneMusic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				95A72A4C2D5A3F0E007CBE8B /* Debug */,
+				95A72A4D2D5A3F0E007CBE8B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		95A72A4E2D5A3F0E007CBE8B /* Build configuration list for PBXNativeTarget "OneMusic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				95A72A4F2D5A3F0E007CBE8B /* Debug */,
+				95A72A502D5A3F0E007CBE8B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 95A72A382D5A3F0E007CBE8B /* Project object */;
+}
