@@ -35,12 +35,12 @@ struct testDatabaseView: View {
             List(viewModel.songs, id: \.id) { song in
                 //let audioURL = URL(string: song.filePath ?? "")
                 HStack {
-                    if let uiImage = UIImage(data: song.coverImage) {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 50, height: 50)
-                    }
+//                    if let uiImage = UIImage(data: song.coverImage) {
+//                        Image(uiImage: uiImage)
+//                            .resizable()
+//                            .scaledToFit()
+//                            .frame(width: 50, height: 50)
+//                    }
                     
                     VStack(alignment: .leading) {
                         Text(song.title)
@@ -48,6 +48,7 @@ struct testDatabaseView: View {
                         Text("Duration: \(song.duration) seconds")
                             .font(.subheadline)
                         
+                        Text(song.filePath)
                         Text(song.filePath)
                         
                         
@@ -67,27 +68,28 @@ struct testDatabaseView: View {
                 .padding()
             }
             .navigationTitle("Songs")
-            .onAppear {
-                // 这里可以插入一首歌曲来测试
-                if let imageData = try? Data(contentsOf: URL(fileURLWithPath: "/Users/zhiye/Downloads/032981110B28104181EAF2562E102574.png")) {
-                    // 在此处提供有效的图片数据
-                    let testSong = Song(id: 46,
-                                        title: "Lost Stars",
-                                        artistId: 3,
-                                        albumId: 63,
-                                        genreId: 3,
-                                        duration: 421,
-                                        filePath: "/Users/zhiye/Downloads/6005970A0Q9.mp3",
-                                        coverImage: imageData
-                    )
-                    viewModel.addSong(song: testSong)
-                    
-                    
-                } else {
-                    // 处理没有封面图片的情况
-                    print("Unable to load cover image.")
-                }
-            }
+//            .onAppear {
+//                // 这里可以插入一首歌曲来测试
+//                if let imageData = try? Data(contentsOf: URL(fileURLWithPath: "/Users/zhiye/Downloads/032981110B28104181EAF2562E102574.png")) {
+//                    // 在此处提供有效的图片数据
+//                    let testSong = Song(id: 760,
+//                                        title: "Lost Stars",
+//                                        artistId: 324200,
+//                                        albumId: 100,
+//                                        artistName: "f",
+//                                        genreId: 30,
+//                                        duration: 410,
+//                                        filePath: "/Users/zhiye/Downloads/6005970A0Q9.mp3",
+//                                        coverImage: "/Users/zhiye/Documents/OneMusicLibrary/Who You Are Is Not Enough/WhoYouAreIsNotEnough.png"
+//                    )
+//                    viewModel.addSong(song: testSong)
+//                    
+//                    
+//                } else {
+//                    // 处理没有封面图片的情况
+//                    print("Unable to load cover image.")
+//                }
+//            }
             
         }
     }

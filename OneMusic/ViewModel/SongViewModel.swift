@@ -5,90 +5,276 @@
 //  Created by 志野陶 on 2025/2/14.
 //
 
+
 import Foundation
 import Combine
+import SwiftUI
+import UIKit
+import UniformTypeIdentifiers
+import AVFoundation
 
 class SongViewModel: ObservableObject {
-    @Published var songs: [Song] = []      // 存储歌曲列表
-    @Published var errorMessage: String?   // 错误消息
-    @Published var isLoading: Bool = false // 加载状态指示
-
-    // 初始化时直接获取歌曲数据
+    // MARK: - 发布属性
+    @Published var songs: [Song] = [] // 当前显示的歌曲列表
+    @Published var isLoading: Bool = false // 是否正在加载数据
+    @Published var errorMessage: String? = nil // 错误信息
+    @Published var currentPage: Int = 1 // 当前分页
+    @Published var totalSongs: Int = 0 // 总歌曲数
+    @Published var isShowingFilePicker: Bool = false // 控制文件选择器的显示
+    @Published var newSongTitle: String = "" // 新歌曲标题
+    @Published var newSongArtist: String = "" // 新歌曲艺术家
+    @Published var newSongAlbum: String = "" // 新歌曲专辑
+    @Published var newSongCoverImage: UIImage? = nil // 新歌曲封面
+    
+    let pageSize: Int = 20 // 每页显示的歌曲数量
+    private var cancellables = Set<AnyCancellable>() // Combine 订阅管理
+    
+    // MARK: - 初始化
     init() {
-        fetchSongs()
+        // 初始化时加载第一页数据
+        loadSongs()
     }
-
-    // 加载所有歌曲
-    func fetchSongs() {
-        self.isLoading = true
-        self.errorMessage = nil
+    
+    // MARK: - 加载歌曲
+    func loadSongs(page: Int = 1) {
+        guard !isLoading else { return } // 避免重复加载
         
-        // 在后台线程执行数据库查询操作
-        DispatchQueue.global(qos: .userInitiated).async {
-            if let fetchedSongs = DatabaseManager.shared.fetchAllSongs() {
+        isLoading = true
+        errorMessage = nil
+        
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self else { return }
+            
+            do {
+                // 从数据库加载歌曲
+                let newSongs = try DatabaseManager.shared.fetchSongs(page: page, pageSize: self.pageSize)
+                let totalSongs = try DatabaseManager.shared.fetchTotalSongCount()
+                
                 DispatchQueue.main.async {
-                    self.songs = fetchedSongs
+                    if page == 1 {
+                        self.songs = newSongs // 如果是第一页，直接替换
+                    } else {
+                        self.songs.append(contentsOf: newSongs) // 否则追加数据
+                    }
+                    self.totalSongs = totalSongs
+                    self.currentPage = page
                     self.isLoading = false
                 }
-            } else {
+            } catch {
                 DispatchQueue.main.async {
-                    self.errorMessage = "Failed to load songs from the database."
+                    self.errorMessage = "加载歌曲失败: \(error.localizedDescription)"
                     self.isLoading = false
                 }
             }
-        }
-    }
-
-    // 添加一首歌曲
-    func addSong(song: Song) {
-        let title = song.title.isEmpty == true ? "Unknown" : song.title              // 默认值为 "Unknown"
-        let artistId = song.artistId
-        let albumId = song.albumId 
-        let genreId = song.genreId
-        let duration = song.duration
-        let filePath = song.filePath.isEmpty ? "Unknown Path" : song.filePath   // 默认值为 "Unknown Path"
-        let coverImage = song.coverImage.isEmpty == true ? Data() : song.coverImage       // 默认值为空的 Data
-        
-        // 异步执行插入操作
-        DispatchQueue.global(qos: .userInitiated).async {
-            // 调用数据库管理器进行插入
-            DatabaseManager.shared.insertSong(title: title, artistId: artistId, albumId: albumId, genreId: genreId, duration: duration, file_path: filePath, coverImage: coverImage)
-            
-            // 测试数据插入传入是否成功
-//            print("Title: \(title)")
-//            print("File Path: \(filePath)")
-            let fileURL = URL(fileURLWithPath: filePath)
-            // 检查传递的路径是否有效
-            if FileManager.default.fileExists(atPath: fileURL.path) {
-                print("File exists at path: \(filePath)")
-            } else {
-                print("File does not exist at path: \(filePath)")
-            }
-            // 插入后刷新歌曲列表
-            DispatchQueue.main.async {
-                self.fetchSongs()
-            }
-        }
-    }
-
-    // 更新歌曲标题
-    func updateSongTitle(songId: Int64, newTitle: String) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            DatabaseManager.shared.updateSongTitle(songId: songId, newTitle: newTitle)
-            
-            // 更新后刷新歌曲列表
-            self.fetchSongs()
-        }
-    }
-
-    // 删除一首歌曲
-    func deleteSong(songId: Int64) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            DatabaseManager.shared.deleteSong(songId: songId)
-            
-            // 删除后刷新歌曲列表
-            self.fetchSongs()
         }
     }
     
+    // MARK: - 加载下一页
+    func loadNextPage() {
+        guard !isLoading, currentPage * pageSize < totalSongs else { return }
+        loadSongs(page: currentPage + 1)
+    }
+    
+    // MARK: - 刷新数据
+    func refresh() {
+        loadSongs(page: 1) // 重新加载第一页
+    }
+    
+    // MARK: - 搜索歌曲
+    func searchSongs(query: String) {
+        guard !query.isEmpty else {
+            loadSongs(page: 1) // 如果查询为空，恢复显示所有歌曲
+            return
+        }
+        
+        isLoading = true
+        errorMessage = nil
+        
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self else { return }
+            
+            do {
+                let searchResults = try DatabaseManager.shared.searchSongs(query: query)
+                DispatchQueue.main.async {
+                    self.songs = searchResults
+                    self.isLoading = false
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.errorMessage = "搜索失败: \(error.localizedDescription)"
+                    self.isLoading = false
+                }
+            }
+        }
+    }
+    
+    // MARK: - 删除歌曲
+    func deleteSong(at indexSet: IndexSet) {
+        guard let index = indexSet.first else { return }
+        let song = songs[index]
+        
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self else { return }
+            
+            do {
+                try DatabaseManager.shared.deleteSong(songId: song.id)
+                DispatchQueue.main.async {
+                    self.songs.remove(at: index) // 从列表中移除
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.errorMessage = "删除失败: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
+    
+    // MARK: - 更新歌曲信息
+    func updateSong(_ song: Song) {
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self else { return }
+            
+            do {
+                try DatabaseManager.shared.updateSong(song)
+                DispatchQueue.main.async {
+                    if let index = self.songs.firstIndex(where: { $0.id == song.id }) {
+                        self.songs[index] = song // 更新列表中的歌曲信息
+                    }
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.errorMessage = "更新失败: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
+    
+    // MARK: - 获取歌曲封面
+    func getCoverImage(for song: Song) -> UIImage? {
+        if let cachedImage: UIImage = CacheManager.shared.getMemoryCache(forKey: "song_cover_\(song.id)") {
+            return cachedImage
+        }
+        
+        if let coverPath = song.coverPath,
+           let image = UIImage(contentsOfFile: coverPath) {
+            CacheManager.shared.setMemoryCache(image, forKey: "song_cover_\(song.id)")
+            return image
+        }
+        
+        return nil
+    }
+    
+    // MARK: - 上传本地音乐
+    func uploadLocalSong(fileURL: URL) {
+        // 检查文件格式
+        guard fileURL.pathExtension.lowercased() == "mp3" else {
+            errorMessage = "仅支持上传 .mp3 文件"
+            return
+        }
+        
+        // 解析 MP3 元数据
+        let metadata = parseMP3Metadata(fileURL: fileURL)
+        
+        // 将文件复制到应用的文档目录
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let destinationURL = documentsDirectory.appendingPathComponent(fileURL.lastPathComponent)
+        
+        do {
+            if FileManager.default.fileExists(atPath: destinationURL.path) {
+                try FileManager.default.removeItem(at: destinationURL)
+            }
+            try FileManager.default.copyItem(at: fileURL, to: destinationURL)
+        } catch {
+            errorMessage = "文件复制失败: \(error.localizedDescription)"
+            return
+        }
+        
+        // 保存封面图片到文档目录
+        var coverPath: String? = nil
+        if let coverImage = newSongCoverImage,
+            let imageData = coverImage.jpegData(compressionQuality: 0.8) {
+            let coverFileName = UUID().uuidString + ".jpg"
+            let coverURL = documentsDirectory.appendingPathComponent(coverFileName)
+            do {
+                try imageData.write(to: coverURL)
+                coverPath = coverURL.path
+            } catch {
+                errorMessage = "封面保存失败: \(error.localizedDescription)"
+                return
+            }
+        }
+        
+        // 创建 Song 对象
+        let newSong = Song(
+            id: 0, // ID 由数据库自动生成
+            title: newSongTitle.isEmpty ? fileURL.lastPathComponent : newSongTitle,
+            duration: 0, // 需要解析 MP3 文件获取时长
+            filePath: destinationURL.path,
+            coverPath: coverPath,
+            albumId: nil,
+            artistId: nil,
+            genreId: nil,
+            releaseDate: nil,
+            artistName: newSongArtist.isEmpty ? "未知艺术家" : newSongArtist,
+            albumTitle: newSongAlbum.isEmpty ? "未知专辑" : newSongAlbum,
+            genreName: nil
+        )
+        
+        // 保存到数据库
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self else { return }
+            
+            do {
+                try DatabaseManager.shared.insertSong(song: newSong)
+                DispatchQueue.main.async {
+                    self.loadSongs(page: 1) // 刷新列表
+                    self.clearForm() // 清空表单
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.errorMessage = "保存歌曲失败: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
+    
+    // MARK: - 清空表单
+    func clearForm() {
+        newSongTitle = ""
+        newSongArtist = ""
+        newSongAlbum = ""
+        newSongCoverImage = nil
+    }
 }
+
+// MARK: - 解析元数据拓展
+extension SongViewModel {
+    
+    // 解析 MP3 文件的元数据
+    func parseMP3Metadata(fileURL: URL) -> (duration: Int, artist: String?, album: String?) {
+        let asset = AVAsset(url: fileURL)
+        var duration = 0
+        var artist: String? = nil
+        var album: String? = nil
+        
+        // 获取时长
+        duration = Int(CMTimeGetSeconds(asset.duration))
+        
+        // 获取元数据
+        let metadata = asset.metadata
+        for item in metadata {
+            switch item.commonKey?.rawValue {
+            case "artist":
+                artist = item.stringValue
+            case "albumName":
+                album = item.stringValue
+            default:
+                break
+            }
+        }
+        
+        return (duration, artist, album)
+    }
+}
+
+

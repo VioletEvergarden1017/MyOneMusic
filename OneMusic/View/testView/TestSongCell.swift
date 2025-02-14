@@ -9,15 +9,7 @@ import SwiftUI
 
 struct TestSongCell: View {
     // 示例数据
-    @State var sObj: Song = Song(id: 9,
-                                 title: "AllAloneWithYou",
-                                 artistId: 1,
-                                 albumId: 1,
-                                 genreId: 1,
-                                 duration: 240,
-                                 filePath: "/Users/zhiye/Downloads/6005970A0Q9.mp3",
-                                 coverImage: Data()
-    )
+    @State var sObj: Song = Song(id: 1, title: "see you again", duration: 111, filePath: "path", coverPath: nil, albumId: nil, artistId: nil, genreId: nil, releaseDate: nil)
 
     var body: some View {
         HStack {
@@ -32,11 +24,11 @@ struct TestSongCell: View {
             VStack(alignment: .leading) {
                 
                 HStack {
-                    Text("AlbumId:" + String(sObj.albumId))
+                    Text("AlbumId:")
                         .font(.customfont(.regular, fontSize: 13))
                         .foregroundColor(Color.primaryText)
                         .lineLimit(1)
-                    Text("GenreID:" + String(sObj.genreId))
+                    Text("GenreID:")
                         .font(.customfont(.regular, fontSize: 13))
                         .foregroundColor(Color.primaryText)
                         .lineLimit(1)

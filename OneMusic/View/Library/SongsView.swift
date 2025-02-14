@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SongsView: View {
     @Environment(\.presentationMode) var presentationMode // 声明页面环境参数
+    @ObservedObject private var viewModel = SongViewModel() // ViewModel
     @State var searchText: String = "" // 需要搜索的歌曲名字
     // all songs示例数据
     @State var allArr: NSArray = [
@@ -61,29 +62,44 @@ struct SongsView: View {
         ]
     ]
     
+//    var mysongs: [Song] = [
+//        Song(id: 1, title: "I", artistId: 1, albumId: 1, artistName: "Athelics", genreId: 1, duration: 1, filePath: "/Users/zhiye/Documents/OneMusicLibrary/Who You Are Is Not Enough/I.mp3", coverImage: "/Users/zhiye/Documents/OneMusicLibrary/Who You Are Is Not Enough/WhoYouAreIsNotEnough.png"),
+//        Song(id: 2, title: "II (Find Yourself)", artistId: 1, albumId: 1, artistName: "Athelics", genreId: 1, duration: 2, filePath: "/Users/zhiye/Documents/OneMusicLibrary/Who You Are Is Not Enough/II (Find Yourself).mp3", coverImage: "/Users/zhiye/Documents/OneMusicLibrary/Who You Are Is Not Enough/WhoYouAreIsNotEnough.png"),
+//        Song(id: 3, title: "II)", artistId: 1, albumId: 1, artistName: "Athelics", genreId: 1, duration: 3, filePath: "/Users/zhiye/Documents/OneMusicLibrary/Who You Are Is Not Enough/II.mp3", coverImage: "/Users/zhiye/Documents/OneMusicLibrary/Who You Are Is Not Enough/WhoYouAreIsNotEnough.png"),
+//        Song(id: 4, title: "III (Find Yourself)", artistId: 1, albumId: 1, artistName: "Athelics", genreId: 1, duration: 4, filePath: "/Users/zhiye/Documents/OneMusicLibrary/Who You Are Is Not Enough/III (Find Yourself) .mp3", coverImage: "/Users/zhiye/Documents/OneMusicLibrary/Who You Are Is Not Enough/WhoYouAreIsNotEnough.png"),
+//        Song(id: 5, title: "III", artistId: 1, albumId: 1, artistName: "Athelics", genreId: 1, duration: 5, filePath: "/Users/zhiye/Documents/OneMusicLibrary/Who You Are Is Not Enough/III.mp3", coverImage: "/Users/zhiye/Documents/OneMusicLibrary/Who You Are Is Not Enough/WhoYouAreIsNotEnough.png"),
+//        Song(id: 6, title: "IV", artistId: 1, albumId: 1, artistName: "Athelics", genreId: 1, duration: 6, filePath: "/Users/zhiye/Documents/OneMusicLibrary/Who You Are Is Not Enough/IV.mp3", coverImage: "/Users/zhiye/Documents/OneMusicLibrary/Who You Are Is Not Enough/WhoYouAreIsNotEnough.png"),
+//    ]
+    
+    
     var body: some View {
         NavigationStack {
             
             VStack{
                 MySearchBar(text: $searchText)
                     .padding(.top, 120)
+//                    .onTapGesture {
+//                        for song in mysongs {
+//                            viewModel.addSong(song: song)
+//                        }
+//                    }
                 //Divider()
                 
+//                Button {
+//                    testAdd()
+//                } label: {
+//                    Text("Add all song")
+//                }
+
+                
                 ScrollView {
-                    ForEach(0..<allArr.count, id: \.self) { index in
+                    ForEach(0..<viewModel.songs.count, id: \.self) { index in
                         
-                        let sObj = allArr[index] as? NSDictionary ?? [:]
-                        
-                        SongsCell(sObj: sObj)
-                    }
-                    ForEach(0..<allArr.count, id: \.self) { index in
-                        
-                        let sObj = allArr[index] as? NSDictionary ?? [:]
+                        let sObj = viewModel.songs[index]
                         
                         SongsCell(sObj: sObj)
                     }
                 }
-                
                 
                 Spacer()
             }
@@ -124,6 +140,11 @@ struct SongsView: View {
         }
     }
 
+//    private func testAdd() {
+//        for song in mysongs {
+//            viewModel.addSong2(song: song)
+//        }
+//    }
 }
 
 

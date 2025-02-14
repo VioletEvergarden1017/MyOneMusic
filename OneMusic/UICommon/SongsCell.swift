@@ -8,29 +8,27 @@
 import SwiftUI
 
 struct SongsCell: View {
-    @State var sObj: NSDictionary = [
-        "image": "alb_1",
-        "name": "History",
-        "artist": "Michael Jackson",
-      ]
-    
+    @State var sObj: Song = Song(id: 34, title: "CountingStars", duration: 345, filePath: "/Users/zhiye/Downloads/6005970A0Q9.mp3", coverPath: "/Users/zhiye/Downloads/EGOIST-All-Alone-With-You.jpg", albumId: nil, artistId: nil, genreId: nil, releaseDate: nil)
+
     var body: some View {
         HStack {
             
             // 歌曲图片
-            Image(sObj.value(forKey: "image") as? String ?? "")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 64, height: 64)
-                .cornerRadius(8)
+            if let uiImage = UIImage(contentsOfFile: sObj.coverPath ?? "") {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 64, height: 64)
+                    .cornerRadius(8)
+            }
             // 歌曲文字部分
             VStack(alignment: .leading) {
                 
-                Text(sObj.value(forKey: "name") as? String ?? "")
+                Text(sObj.title)
                     .font(.customfont(.regular, fontSize: 17))
                     .foregroundColor(Color.primaryText)
                     .lineLimit(1)
-                Text(sObj.value(forKey: "artist") as? String ?? "")
+                Text("singer name")
                     .font(.customfont(.regular, fontSize: 13))
                     .foregroundColor(Color.primaryText35)
                     .lineLimit(1)
