@@ -1,0 +1,182 @@
+//
+//  AlbumDetailsView.swift
+//  OneMusic
+//
+//  Created by 志野陶 on 2025/2/11.
+//
+
+import SwiftUI
+
+struct AlbumDetailsView: View {
+    
+    @Environment(\.presentationMode) var presentationMode // 声明页面环境参数: 展示状态
+    // 示例数据
+    @State var demoAlbum: NSArray = [
+        ["duration": "3:56", "name": "Billie Jean", "artists": "Michael Jackson"],
+        ["duration": "3:56", "name": "Earth Song", "artists": "Michael Jackson"],
+        ["duration": "3:56", "name": "Mirror", "artists": "Justin Timberlake"],
+        ["duration": "3:56", "name": "Remember the Time","artists": "Michael Jackson"],
+        ["duration": "3:56", "name": "Billie Jean", "artists": "Michael Jackson"],
+        ["duration": "3:56", "name": "Earth Song", "artists": "Michael Jackson"],
+        ["duration": "3:56", "name": "Mirror", "artists": "Justin Timberlake"],
+        ["duration": "3:56", "name": "Remember the Time","artists": "Michael Jackson"],
+        ["duration": "3:56", "name": "Billie Jean", "artists": "Michael Jackson"],
+        ["duration": "3:56", "name": "Earth Song", "artists": "Michael Jackson"],
+        ["duration": "3:56", "name": "Mirror", "artists": "Justin Timberlake"],
+        ["duration": "3:56", "name": "Remember the Time","artists": "Michael Jackson"]
+    ]
+    var isPlay: Bool = false
+    
+    var body: some View {
+        
+        VStack {
+            
+            ScrollView {
+                // MARK: - 专辑信息部分
+                VStack(alignment: .center,spacing: 10) {
+                    Image("alb_1")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 256, height: 256)
+                        .cornerRadius(16)
+                    // 文字内容
+                    VStack(spacing: 1) {
+                        // 歌曲名
+                        Text("Who You Are Is Not Enough")
+                            .font(.customfont(.bold, fontSize: 23))
+                            .foregroundColor(Color.primaryText)
+                            .lineLimit(1)
+                        // 歌手名按钮
+                        Text("Athletics")
+                            .font(.customfont(.regular, fontSize: 20))
+                            .foregroundColor(Color.primaryText35)
+                            .lineLimit(1)
+                        // 曲风
+                        Text("Postrock · 2014 · Lossless")
+                            .font(.customfont(.bold, fontSize: 13))
+                            .lineLimit(1)
+                    }
+                }
+                .frame(width: .screenWidth - 40)
+                
+                //MARK: - 播放按钮
+                HStack(alignment: .center, spacing: 20) {
+                    
+                    Button {
+                        // 顺序播放操作
+                    } label: {
+                        HStack(alignment: .center) {
+                            Image("alb_play")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 40, height: 40)
+                            Text("Play")
+                                .font(.customfont(.bold, fontSize: 17))
+                                .foregroundColor(.primaryText80)
+                        }
+                        .frame(width: 156, height: 60)
+                        .background(Color.bg_light)
+                        .cornerRadius(8)
+                    }
+
+                    Button {
+                        // 随机播放操作
+                    } label: {
+                        HStack(alignment: .center) {
+                            Image("alb_shuffle")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 40, height: 40)
+                            Text("Shuffle")
+                                .font(.customfont(.bold, fontSize: 17))
+                                .foregroundColor(.primaryText80)
+                        }
+                        .frame(width: 156, height: 60)
+                        .background(Color.bg_light)
+                        .cornerRadius(8)
+                    }
+
+                }
+                
+                // 专辑曲目部分
+                LazyVStack {
+                    ForEach(0..<demoAlbum.count, id: \.self) { index in
+                        let sObj = demoAlbum[index] as?NSDictionary ?? [:]
+                        
+                        AlbumnSongRow(sObj: sObj, index: index, isPlay: false)
+                    }
+                }
+
+            }
+            .padding(.top, .topInsets + 48)
+        }
+        .padding(.bottom, .bottomInsets + 44)
+        .frame(width: .screenWidth, height: .screenHeight)
+        .background(Color.bg)
+        .ignoresSafeArea()
+        .navigationBarBackButtonHidden(true)  // 隐藏系统自带的返回以实现自定义返回按钮
+        .navigationBarItems(leading: backBtn) // 实现自定义返回
+        .toolbar {
+            // 导航烂右侧功能
+            ToolbarItem(placement: .primaryAction) {
+                addBtn
+            }
+            ToolbarItem(placement: .destructiveAction) {
+                moreBtn
+            }
+        }
+        
+    }
+    
+    // MARK: - 返回按钮
+    private var backBtn: some View {
+        Button(action: {
+            // 实现自定义返回逻辑
+            self.presentationMode.wrappedValue.dismiss()
+        }) {
+            HStack(alignment: .center) {
+                Image("back")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 25, height: 25)
+                // 对齐方式不好看所以先注释掉 “back” 文字
+                Text("Album")
+                    .font(.customfont(.regular, fontSize: 17))
+                    .foregroundColor(Color(hex: "C3FFCC"))
+            }
+            //.padding(.horizontal)
+        }
+    }
+    
+    // MARK: - 添加至资料库按钮
+    private var addBtn: some View {
+        Button {
+            // 将专辑添加至资料库
+            
+        } label: {
+            Image("navi_add")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 25, height: 25)
+        }
+
+    }
+    
+    // MARK: - 添加至资料库按钮
+    private var moreBtn: some View {
+        Button {
+            // 将专辑添加至资料库
+            
+        } label: {
+            Image("navi_more")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 25, height: 25)
+        }
+
+    }
+}
+
+#Preview {
+    AlbumDetailsView()
+}

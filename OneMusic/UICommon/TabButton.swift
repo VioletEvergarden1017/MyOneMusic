@@ -23,7 +23,7 @@ struct TabButton: View {
                 Image(isSelect ? icon : icon_focus)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 30, height: 30)
+                    .frame(width: 20, height: 20)
                 
                 Text(title)
                     .font(.customfont(.regular, fontSize: 12))

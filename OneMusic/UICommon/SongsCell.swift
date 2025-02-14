@@ -1,0 +1,99 @@
+//
+//  SongsView.swift
+//  OneMusic
+//
+//  Created by 志野陶 on 2025/2/12.
+//
+
+import SwiftUI
+
+struct SongsCell: View {
+    @State var sObj: NSDictionary = [
+        "image": "alb_1",
+        "name": "History",
+        "artist": "Michael Jackson",
+      ]
+    
+    var body: some View {
+        HStack {
+            
+            // 歌曲图片
+            Image(sObj.value(forKey: "image") as? String ?? "")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 64, height: 64)
+                .cornerRadius(8)
+            // 歌曲文字部分
+            VStack(alignment: .leading) {
+                
+                Text(sObj.value(forKey: "name") as? String ?? "")
+                    .font(.customfont(.regular, fontSize: 17))
+                    .foregroundColor(Color.primaryText)
+                    .lineLimit(1)
+                Text(sObj.value(forKey: "artist") as? String ?? "")
+                    .font(.customfont(.regular, fontSize: 13))
+                    .foregroundColor(Color.primaryText35)
+                    .lineLimit(1)
+            }
+            
+            Spacer()
+            
+            Image("more")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 32, height: 32)
+                .padding(.trailing, 10)
+        }
+        .background(Color.bg)
+        .padding(.horizontal, 20)
+        .frame(maxWidth: .infinity, maxHeight: 72)
+        // 长按菜单
+        .contextMenu {
+            VStack {
+                MenuTextBtn(text: "Play", img: "rm_play")
+                Divider()
+                MenuTextBtn(text: "Delete from Library", img: "rm_delete")
+                MenuTextBtn(text: "DownLoad", img: "rm_download")
+                MenuTextBtn(text: "Add to Playlist...", img: "rm_add_list")
+                Divider()
+                MenuTextBtn(text: "Play Next", img: "rm_play")
+                MenuTextBtn(text: "Play Last", img: "rm_play")
+                Divider()
+                MenuTextBtn(text: "Share Album...", img: "rm_share")
+                MenuTextBtn(text: "Go to Artist", img: "rm_play")
+                Divider()
+                MenuTextBtn(text: "Favorite", img: "rm_star")
+                MenuTextBtn(text: "Suggest Less", img: "rm_thumb_down")
+            }
+        }
+
+    }
+}
+
+private struct MenuTextBtn: View {
+    @State var text: String = ""
+    @State var img: String = ""
+    
+    var body: some View {
+        
+        Button {
+            // 按下按钮的操作
+        } label: {
+            HStack {
+                Text(text)
+                    .font(.customfont(.regular, fontSize: 17))
+                Spacer()
+                Image(img)
+                    .resizable()
+                    .frame(width: 25, height: 25)
+                    .scaledToFit()
+            }
+            .background(Color.bg)
+        }
+
+    }
+}
+
+#Preview {
+    SongsCell()
+}

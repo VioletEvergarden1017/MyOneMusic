@@ -132,8 +132,13 @@ extension Color {
     static var secondaryG: [Color] {
         return [secondaryStart, secondaryEnd]
     }
+    // 背景色
     static var bg: Color {
         return Color(hex: "40514e")
+    }
+    // 稍微浅一点的背景
+    static var bg_light: Color {
+        return Color(hex: "43676b")
     }
     
     static var darkGray: Color {
@@ -183,5 +188,22 @@ struct RoundedCorner: Shape {
     func path(in rect: CGRect) -> Path {
         let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corner, cornerRadii: CGSize(width: radius, height: radius))
         return Path(path.cgPath)
+    }
+}
+
+
+// MARK: -侧滑返回逻辑拓展
+/**
+ Navigation View 导航视图的底层逻辑是UIKit中的UI Navigation，故需要对底层的UINavigaitonViewController类进行拓展。
+ 对UIGestureRecognizerDelegate协议的拓展控制，用于控制交互式弹出手势识别器的行为。
+ */
+extension UINavigationController:  UIGestureRecognizerDelegate {
+    override open func viewDidLoad() {
+        super.viewDidLoad()
+        interactivePopGestureRecognizer?.delegate = self // 将该对象赋值为self，确定是否应该识别弹出的手势。
+    }
+    
+    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return viewControllers.count > 1
     }
 }

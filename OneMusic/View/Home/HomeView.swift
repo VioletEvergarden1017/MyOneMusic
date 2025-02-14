@@ -9,6 +9,8 @@ import SwiftUI
 
 struct HomeView: View {
     
+    @StateObject var mainVM =  MainViewModel.share
+    
     @State var textSearch: String = ""
     @State var recommendedForYou = [
         [
@@ -208,14 +210,17 @@ struct HomeView: View {
                 .padding(.horizontal, 20)
                 .padding(.vertical, 8)
             }
+
            
             
             // MARK: - 顶部搜索栏
             VStack {
                 
+                // 打开侧边栏
                 HStack(spacing: 15) {
                     Button {
-                        
+                        print("Open SideMenu")
+                        mainVM.isShowSideMenu = true // 侧滑是否展示
                     } label: {// About 侧滑页
                         Image("menu")
                             .resizable()
@@ -248,6 +253,7 @@ struct HomeView: View {
             }
             
         }
+        .padding(.bottom, 44)
         .frame(width: .screenWidth, height: .screenHeight)
         .background(Color.bg)
         .navigationTitle("")

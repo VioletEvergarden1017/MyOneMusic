@@ -8,45 +8,20 @@
 import SwiftUI
 
 struct MainTabView: View {
-    
-    @State var selectTab: Int = 0
+    @StateObject var mainVM =  MainViewModel.share
+
     
     var body: some View {
         ZStack {
             
-            // 选择展示的页面
-//            TabView(selection: $selectTab) {
-//                
-//                VStack {
-//                    Spacer()
-//                    Text("Home")
-//                    Spacer()
-//                }
-//            }
-//            .background(Color.bg)
             // MARK: - 选择所展示的页面
-            if(selectTab == 0) {
-                
-                VStack {
-                    Spacer()
-                    Text("Home")
-                        .foregroundColor(.primaryText)
-                    Spacer()
-                }
-                .frame(width: .screenWidth, height: .screenHeight)
-                .background(Color.bg)
+            if(mainVM.selectTab == 0) {
+                HomeView() // 显示主页
             }
-            else if(selectTab == 1) {
-                VStack {
-                    Spacer()
-                    Text("Songs")
-                        .foregroundColor(.primaryText)
-                    Spacer()
-                }
-                .frame(width: .screenWidth, height: .screenHeight)
-                .background(Color.bg)
+            else if(mainVM.selectTab == 1) {
+                LibraryView() // 显示资料库页面
             }
-            else if(selectTab == 2) {
+            else if(mainVM.selectTab == 2) {
                 VStack {
                     Spacer()
                     Text("Personal")
@@ -56,7 +31,7 @@ struct MainTabView: View {
                 .frame(width: .screenWidth, height: .screenHeight)
                 .background(Color.bg)
             }
-            else if(selectTab == 3) {
+            else if(mainVM.selectTab == 3) {
                 VStack {
                     Spacer()
                     Text("Settings")
@@ -74,23 +49,23 @@ struct MainTabView: View {
                 HStack {
                     Spacer()
                     // 主页
-                    TabButton(title: "Home", icon: "home_tab", icon_focus: "home_tab_un", isSelect: selectTab == 0) {// 点击之后的操作
-                        selectTab = 0
+                    TabButton(title: "Home", icon: "home_tab", icon_focus: "home_tab_un", isSelect: mainVM.selectTab == 0) {// 点击之后的操作
+                        mainVM.selectTab = 0
                     }
                     Spacer()
                     // 歌曲页
-                    TabButton(title: "Library", icon: "songs_tab", icon_focus: "songs_tab_un", isSelect: selectTab == 1) {// 点击之后选择页面位歌曲页
-                        selectTab = 1
+                    TabButton(title: "Library", icon: "songs_tab", icon_focus: "songs_tab_un", isSelect: mainVM.selectTab == 1) {// 点击之后选择页面位歌曲页
+                        mainVM.selectTab = 1
                     }
                     Spacer()
                     // 个人页
-                    TabButton(title: "Personal", icon: "personal_tab", icon_focus: "personal_tab_un", isSelect: selectTab == 2) {// 点击之后选择页面为设置页
-                        selectTab = 2
+                    TabButton(title: "Personal", icon: "personal_tab", icon_focus: "personal_tab_un", isSelect: mainVM.selectTab == 2) {// 点击之后选择页面为设置页
+                        mainVM.selectTab = 2
                     }
                     Spacer()
                     // 设置页
-                    TabButton(title: "Settings", icon: "setting_tab", icon_focus: "setting_tab_un", isSelect: selectTab == 3) {// 点击之后选择页面为设置页
-                        selectTab = 3
+                    TabButton(title: "Settings", icon: "setting_tab", icon_focus: "setting_tab_un", isSelect: mainVM.selectTab == 3) {// 点击之后选择页面为设置页
+                        mainVM.selectTab = 3 // 修改ViewModel的参数
                     }
                     
                     Spacer()
@@ -101,6 +76,8 @@ struct MainTabView: View {
                 .background(Color.bg)
                 .shadow(radius: 5)
             }
+            // 采用 ViewModel 的参数
+            SideMenuView(isShowing: $mainVM.isShowSideMenu)
         }
         .frame(width: .screenWidth, height: .screenHeight)
         .background(Color.bg)
