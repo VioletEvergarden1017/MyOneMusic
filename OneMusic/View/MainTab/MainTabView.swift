@@ -8,41 +8,55 @@
 import SwiftUI
 
 struct MainTabView: View {
+    // 核心环节对象
     @StateObject var mainVM =  MainViewModel.share
-
+    @StateObject var songVM = SongViewModel()
+    @StateObject var playlistVM = PlaylistViewModel()
+    @StateObject var audioPlayer = AudioPlayerManager.shared
     
     var body: some View {
         ZStack {
             
             // MARK: - 选择所展示的页面
-            if(mainVM.selectTab == 0) {
-                HomeView() // 显示主页
-            }
-            else if(mainVM.selectTab == 1) {
-                LibraryView() // 显示资料库页面
-            }
-            else if(mainVM.selectTab == 2) {
-                VStack {
-                    Spacer()
-                    Text("Personal")
-                        .foregroundColor(.primaryText)
-                    Spacer()
+            // 主要内容区域
+            Group {
+                if(mainVM.selectTab == 0) {
+                    HomeView() // 显示主页
                 }
-                .frame(width: .screenWidth, height: .screenHeight)
-                .background(Color.bg)
-            }
-            else if(mainVM.selectTab == 3) {
-                VStack {
-                    Spacer()
-                    Text("Settings")
-                        .foregroundColor(.primaryText)
-                    Spacer()
+                else if(mainVM.selectTab == 1) {
+                    LibraryView() // 显示资料库页面
                 }
-                .frame(width: .screenWidth, height: .screenHeight)
-                .background(Color.bg)
+                else if(mainVM.selectTab == 2) {
+                    VStack {
+                        Spacer()
+                        Text("Personal")
+                            .foregroundColor(.primaryText)
+                        Spacer()
+                    }
+                    .frame(width: .screenWidth, height: .screenHeight)
+                    .background(Color.bg)
+                }
+                else if(mainVM.selectTab == 3) {
+                    VStack {
+                        Spacer()
+                        Text("Settings")
+                            .foregroundColor(.primaryText)
+                        Spacer()
+                    }
+                    .frame(width: .screenWidth, height: .screenHeight)
+                    .background(Color.bg)
+                }
             }
+            .frame(width: .screenWidth, height: .screenHeight)
+            .padding(.bottom, 44) // 为悬浮胶囊和 TabBar 预留部分控价
             
-            // MARK: - 底部导航按钮
+
+            // MARK: - 全局悬浮的music胶囊
+            MusicPillView()
+                .environmentObject(audioPlayer)
+                .offset(y:300) // 悬浮在TabBar上方
+            
+            //MARK: - 底部导航按钮
             VStack {
                 Spacer()
                 
@@ -71,25 +85,42 @@ struct MainTabView: View {
                     Spacer()
     
                 }
-                .padding(.top, 10)
+                .frame(height: 44)
                 .padding(.bottom, .bottomInsets)
+                .padding(.top, 10)
                 .background(Color.bg)
                 .shadow(radius: 5)
             }
+            .padding(.bottom, .bottomInsets)
             // 采用 ViewModel 的参数
             SideMenuView(isShowing: $mainVM.isShowSideMenu)
         }
-        .frame(width: .screenWidth, height: .screenHeight)
         .background(Color.bg)
-        .navigationTitle("")
-        .navigationBarBackButtonHidden()
-        .navigationBarHidden(true)
         .ignoresSafeArea()
     }
 }
 
-struct MainTabView_Previews: PreviewProvider {
-    static var previews: some View {
-        MainTabView()
-    }
+#Preview {
+    let mbm = MainViewModel.share
+    let ap = AudioPlayerManager.shared
+    ap.currentSong = Song(
+        id: 1,
+        title: "All Alone With You",
+        duration: 240,
+        filePath: Bundle.main.path(forResource: "ALL", ofType: "mp3") ?? "",
+        coverPath: Bundle.main.path(forResource: "all", ofType: "jpg") ?? "",
+        albumId: nil,
+        artistId: nil,
+        genreId: nil,
+        releaseDate: nil,
+        artistName: "EGOIST",
+        albumTitle: "Extra Terrestrial Biological Entities",
+        genreName: "Anime"
+    )
+    return MainTabView(mainVM: mbm, audioPlayer: ap)
 }
+
+
+
+
+

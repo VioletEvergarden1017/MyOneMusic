@@ -8,10 +8,8 @@
 import SwiftUI
 
 struct PlaylistRow: View {
-    @State var sObj: NSDictionary = [
-        "image": "alb_1",
-        "name": "Favorite Songs",
-      ]
+    
+    let playlist: Playlist // 使用playlist模型
     
     var body: some View {
         VStack() {
@@ -19,19 +17,23 @@ struct PlaylistRow: View {
             HStack(spacing: 15) {
                 
                 // 歌曲图片
-                Image(sObj.value(forKey: "image") as? String ?? "")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 80, height: 80)
-                    .cornerRadius(8)
+                if let uiImage = UIImage(contentsOfFile: playlist.coverPath ?? "") {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 80, height: 80)
+                        .cornerRadius(8)
+                }
                 // 歌曲文字部分
                 VStack(alignment: .leading) {
                     
-                    Text(sObj.value(forKey: "name") as? String ?? "")
+                    Text(playlist.name)
                         .font(.customfont(.regular, fontSize: 17))
                         .frame(width: 200, alignment: .leading)
                         .foregroundColor(Color.primaryText)
                         .lineLimit(1)
+                    
+                    //Text
                 }
                 
                 Spacer()
@@ -51,21 +53,14 @@ struct PlaylistRow: View {
                     Divider()
                     MenuTextBtn(text: "Delete from Library", img: "rm_delete")
                     MenuTextBtn(text: "DownLoad", img: "rm_download")
-                    MenuTextBtn(text: "Add to Playlist...", img: "rm_add_list")
                     Divider()
                     MenuTextBtn(text: "Play Next", img: "rm_play")
                     MenuTextBtn(text: "Play Last", img: "rm_play")
                     Divider()
                     MenuTextBtn(text: "Share Playlist...", img: "rm_share")
-                    MenuTextBtn(text: "Go to Artist", img: "rm_play")
-                    Divider()
-                    MenuTextBtn(text: "Favorite", img: "rm_star")
-                    MenuTextBtn(text: "Suggest Less", img: "rm_thumb_down")
                 }
             }
             
-//            Divider()
-//                .padding(.leading, 90)
         }
         .padding(.horizontal, 20)
         .frame(height: 100)
@@ -98,5 +93,11 @@ private struct MenuTextBtn: View {
 }
 
 #Preview {
-    PlaylistRow()
+    var playlist = Playlist(
+        id: 1,
+        name: "My Favorite Song",
+        songs: [Song(id: 34, title: "CountingStars", duration: 345, filePath: "/Users/zhiye/Downloads/6005970A0Q9.mp3", coverPath: "/Users/zhiye/Downloads/EGOIST-All-Alone-With-You.jpg", albumId: nil, artistId: nil, genreId: nil, releaseDate: nil)],
+        coverPath: "/Users/zhiye/Downloads/032981110B28104181EAF2562E102574.png"
+    )
+    PlaylistRow(playlist: playlist)
 }

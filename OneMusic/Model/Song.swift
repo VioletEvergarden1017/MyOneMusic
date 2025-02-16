@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Song: Identifiable {
+struct Song: Identifiable, Equatable {
     let id: Int64
     let title: String
     let duration: Int

@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+protocol Playable {
+    func setupQueue(tracks: [Song], startIndex: Int)
+    func play()
+}

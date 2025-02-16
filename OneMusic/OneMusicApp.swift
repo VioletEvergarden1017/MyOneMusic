@@ -13,7 +13,7 @@ struct OneMusicApp: App {
         WindowGroup {
             
             NavigationView {
-                SongListView()
+                //DefaultPlayerView(currentSong: )
             }
             .navigationViewStyle(.stack)
         }

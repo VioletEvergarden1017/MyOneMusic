@@ -29,14 +29,26 @@ class SongViewModel: ObservableObject {
     let pageSize: Int = 20 // 每页显示的歌曲数量
     private var cancellables = Set<AnyCancellable>() // Combine 订阅管理
     
+    // MARK: - 标志位，用于控制是否从数据库当中读取数据，还是单纯在preview当中显示
+    var shouldLoadFromDatabase: Bool = true
     // MARK: - 初始化
-    init() {
-        // 初始化时加载第一页数据
-        loadSongs()
+    init(shouldLoadFromDatabase: Bool = true) {
+        self.shouldLoadFromDatabase = shouldLoadFromDatabase
+        if shouldLoadFromDatabase {
+            // 初始化时加载第一页数据
+            print("使用数据库当中的数据")
+            loadSongs()
+        } else { print("预览模式跳过初始化") }
     }
     
     // MARK: - 加载歌曲
     func loadSongs(page: Int = 1) {
+        // 修改判断逻辑
+        guard shouldLoadFromDatabase else {
+            print("预览模式跳过数据库加载")
+            isLoading = false
+            return
+        }
         guard !isLoading else { return } // 避免重复加载
         
         isLoading = true
@@ -245,6 +257,8 @@ class SongViewModel: ObservableObject {
         newSongAlbum = ""
         newSongCoverImage = nil
     }
+    
+    
 }
 
 // MARK: - 解析元数据拓展
@@ -278,3 +292,57 @@ extension SongViewModel {
 }
 
 
+// MARK: - 插入测试数据
+extension SongViewModel {
+    
+    // 手动插入一部分数据
+    func insertTestData() {
+        let song1 = Song(
+            id: 1,
+            title: "All Alone With You1111",
+            duration: 395,
+            filePath: "/Users/zhiye/Downloads/6005970A0Q9.mp3",
+            coverPath: "/Users/zhiye/Downloads/EGOIST-All-Alone-With-You.jpg",
+            albumId: nil,
+            artistId: nil,
+            genreId: nil,
+            releaseDate: nil,
+            artistName: "EGOIST111",
+            albumTitle: "Extra Terrestrial Biological Entities",
+            genreName: "Anime"
+        )
+        
+        let song2 = Song(
+            id: 2,
+            title: "Sample Song",
+            duration: 240,
+            filePath: "/Users/zhiye/Downloads/6005970A0Q9.mp3",
+            coverPath: "/Users/zhiye/Downloads/preview_cover_4.jpg",
+            albumId: nil,
+            artistId: nil,
+            genreId: nil,
+            releaseDate: nil,
+            artistName: "Sample Artist",
+            albumTitle: "Sample Album",
+            genreName: "Pop"
+        )
+        
+        do {
+            try DatabaseManager.shared.insertSong(song: song1)
+            try DatabaseManager.shared.insertSong(song: song2)
+            print("测试数据已插入数据库")
+        } catch {
+            print("插入测试数据失败: \(error.localizedDescription)")
+        }
+    }
+    
+    // MARK: - 添加专用的预览初始化方法
+    static func preview(songs: [Song]) -> SongViewModel {
+        let viewModel = SongViewModel()
+        viewModel.songs = songs
+        viewModel.shouldLoadFromDatabase = false
+        return viewModel
+    }
+}
+
+// MARK: - 统一播放协议

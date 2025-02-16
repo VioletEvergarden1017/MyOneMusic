@@ -9,16 +9,14 @@ import SwiftUI
 import AVKit
 
 struct DefaultPlayerView: View {
-    // 播放器状态变量
-    @State private var player: AVAudioPlayer? // 音频播放器对象
-    @State private var isPlaying = false      // 当前播放状态
-    @State private var duration: TimeInterval = 0.0 // 音频总时长
-    @State private var currentTime: TimeInterval = 0.0 // 当前播放时间
+    // MARK : - 播放器核心属性
+    @StateObject private var audioPlayer = AudioPlayerManager.shared // 全局播放器
+    //@Binding var currentSong: Song? // 当前播放歌曲
+    @Binding var isExpanded: Bool // 控制展开/收起状态
     
-    // 控制 Sheet 拓展的绑定变量（滑动关闭）
-    @Binding var expandSheet: Bool // 是否展开 Sheet
-    var animation: Namespace.ID // 用于动画的命名空间ID
-    @State private var animationContent: Bool = false // 控制动画内容的状态变量
+    // 播放器手势状态
+    @State private var dragOffset: CGSize = .zero
+    private let dragThreshold: CGFloat = 150 // 下滑触发阈值
     
     var body: some View {
         GeometryReader { //geometry in
@@ -38,17 +36,26 @@ struct DefaultPlayerView: View {
                 
                 // 主要页面布局
                 VStack(spacing: 15) {
-                    GeometryReader { geometry in // 传递闭包的参数
-                        let size = geometry.size // 将 geometry 的 size 属性赋值给size供使用
-                        Image("player_bg")
-                            .resizable().aspectRatio(contentMode: .fill)
-                            .frame(width: size.width, height: size.height)
-                            .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous)) // 将视图裁剪为圆角矩形， 圆角样式为连续曲线
+                    // 封面
+                    if let coverPath = audioPlayer.currentSong?.coverPath,
+                       let imageData = try? Data(contentsOf: URL(fileURLWithPath: coverPath)),
+                       let coverImage = UIImage(data: imageData) {
+                        Image(uiImage: coverImage)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: size.width - 50, height: size.width - 50)
+                            .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+                    } else {
+                        // 默认封面
+                        Image(systemName: "music.note")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: size.width - 50, height: size.width - 50)
+                            .foregroundColor(.gray)
                     }
-                    .frame(height: size.width - 50)
-                    .padding(.vertical, size.height < 700 ? 10 : 30)
                     
-                    PlayerView(size) // 播放器视图
+                    // 播放器控件
+                    PlayerView(size)
                 }
                 .padding(.top, safeArea.top + (safeArea.bottom == 0 ? 10 : 0))
                 .padding(.bottom, safeArea.bottom  == 0 ? 10 : 0)
@@ -57,163 +64,205 @@ struct DefaultPlayerView: View {
                 .clipped()
             }
             .ignoresSafeArea(.container, edges: .all)
+            .offset(y: isExpanded ? 0 : size.height) // 展开/收起动画
+            .animation(.spring(response: 0.5, dampingFraction: 0.8, blendDuration: 0), value: isExpanded)
+            // 补充下滑切出播放器view
+            .gesture(
+                DragGesture()
+                    .onChanged { value in
+                        // 仅仅允许向下滑动
+                        if value.translation.height > 0 {
+                            dragOffset = value.translation
+                        }
+                    }
+                    .onEnded { value in
+                        if value.translation.height > dragThreshold { // 滑动擦过阈值关闭页面
+                            isExpanded = false
+                        }
+                        dragOffset = .zero
+                    }
+            )
         }
-        .onAppear(perform: setupAudio) // 视图出现的时候设置音频
-        .onReceive(Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()) { _ in
-            updateProgress() // 定时更新播放进度
+        .onAppear {
+            if let song = audioPlayer.currentSong {
+                audioPlayer.loadSong(song)
+            }
         }
-    }
-    
-    // 设置音乐播放器
-    private func setupAudio() {
-        guard let url = Bundle.main.url(forResource: "ALL", withExtension: "mp3")
-        else {
-            return // 退出当前函数
-        }
-        do {
-            player = try AVAudioPlayer(contentsOf: url)
-            player?.prepareToPlay() // prepareToPlay ： 准备音频播放的方法
-            duration = player?.duration ?? 0.0
-        } catch { // 捕获 do 块当中抛出的错误
-            print("Error loading audio: \(error)")
-        }
-    }
-    
-    // 播放音频
-    private func playAudio() {
-        player?.play() // play() 调用 player 的 play 方法， 即开始播放音频
-        isPlaying = true
-    }
-    
-    // 暂停音频
-    private func stopAudio() {
-        player?.pause() // play() 调用 player 的 pause 方法， 即开始暂停音频
-        isPlaying = false
-    }
-    
-    // 获取播放进度
-    private func updateProgress() {
-        guard let player = player else { return }
-        currentTime = player.currentTime // 获取播放进度
-    }
-    
-    // 跳转至制定时间播放
-    private func seekAudio(to time: TimeInterval) {
-        player?.currentTime = time
-        if !isPlaying {
-            player?.play()
-            isPlaying = true
-        }
-    }
-    
-    // 将时间间隔格式转化为字符串
-    private func timeString(time: TimeInterval) -> String {
-        let minute = Int(time) / 60
-        let seconds = Int(time) % 60
-        return String(format: "%02d:%02d", minute, seconds)
+
     }
     
     // 播放器视图
     @ViewBuilder
     func PlayerView(_ mainSize: CGSize) -> some View {
-        
-        GeometryReader { geometry in
-            let size = geometry.size
-            let spacing = size.height * 0.04 // 基于视图高度计算间距
-            
-            VStack(spacing: spacing) {
-                VStack(spacing: spacing) {
-                    HStack(alignment: .center, spacing: 15) {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("All Alone With You")
-                                .font(.title3)
-                                .fontWeight(.semibold)
-                            Text("EGOIST")
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        
-                        Button {
-                            
-                        } label: {
-                            Image(systemName: "ellipsis")
-                                .foregroundColor(.white)
-                                .padding()
-                                .background() {
-                                    Circle()
-                                        .fill(.ultraThinMaterial)
-                                        .environment(\.colorScheme, .light)
-                                }
-                        }
-
-                    }
-                    
-                    // 播放进度条
-                    Slider(value: Binding(get: {
-                        currentTime
-                    }, set: { newValue in // 更新
-                        seekAudio(to: newValue)
-                    }), in: 0...duration)
-                    .foregroundColor(.white)
-                    
-                    HStack {
-                        Text(timeString(time: currentTime))
-                        Spacer()
-                        Text(timeString(time: duration))
-                    }
+        VStack(spacing: 20) { // 播放器视图整体间距
+            // 歌曲信息
+            HStack(alignment: .center, spacing: 15) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(audioPlayer.currentSong?.title ?? "未知歌曲")
+                        .font(.customfont(.medium, fontSize: 20))
+                    Text(audioPlayer.currentSong?.artistName ?? "未知艺术家")
+                        .font(.customfont(.regular, fontSize: 16))
                 }
-                .frame(height: size.height / 2.5, alignment: .top)
+                .frame(maxWidth: .infinity, alignment: .leading)
                 
-                // 上一首，暂停，下一首按钮部分
-                HStack(spacing: size.width * 0.18) {
-                    Button {
-                        
-                    } label: {
-                        Image(systemName: "backward.fill")
-                            .font(size.height < 300 ? .title3 : .title)
-                    }
-                    Button {
-                        isPlaying ? stopAudio() : playAudio()
-                    } label: {
-                        Image(systemName: isPlaying ? "pause.fill" : "play.fill")
-                            .font(size.height < 300 ? .largeTitle : .system(size: 50))
-                    }
-                    Button {
-                        
-                    } label: {
-                        Image(systemName: "backward.fill")
-                            .font(size.height < 300 ? .title3 : .title)
-                    }
+                Button {
+                    // 更多操作
+                } label: {
+                    Image(systemName: "ellipsis")
+                        .foregroundColor(.white)
+                        .padding()
+                        .background {
+                            Circle()
+                                .fill(.ultraThinMaterial)
+                                .environment(\.colorScheme, .light)
+                        }
                 }
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity)
-                
-                // 调整声音模块
-                VStack(spacing: spacing) {
-                    HStack(spacing: 15) {
-                        Image(systemName: "speaker.fill")
-                        
-                        Capsule()
-                            .fill(.ultraThinMaterial)
-                            .environment(\.colorScheme, .light)
-                            .frame(height: 5)
-                        Image(systemName: "speaker.wave.3.fill")
-                    }
-                    
-                }
-                .offset(y: 40)
             }
+            
+            // 进度条
+            CustomProgressBar(
+                progress: $audioPlayer.currentTime,
+                duration: audioPlayer.duration,
+                thumbColor: .progressThumb,
+                trackColor: .progressTrack
+            )
+            .frame(height: 4)
+            
+            // 时间显示
+            HStack {
+                Text(audioPlayer.timeString(time: audioPlayer.currentTime))
+                Spacer()
+                Text(audioPlayer.timeString(time: audioPlayer.duration))
+            }
+            
+            // 控制按钮
+            HStack(spacing: mainSize.width * 0.18) {
+                Button {
+                    // 上一首
+                    audioPlayer.playPrevious()
+                } label: {
+                    Image(systemName: "backward.fill")
+                        .font(mainSize.height < 300 ? .title3 : .title)
+                }
+                
+                Button {
+                    audioPlayer.playPause()
+                } label: {
+                    Image(systemName: audioPlayer.isPlaying ? "pause.fill" : "play.fill")
+                        .font(mainSize.height < 300 ? .largeTitle : .system(size: 50))
+                }
+                
+                Button {
+                    // 下一首
+                    audioPlayer.playNext()
+                } label: {
+                    Image(systemName: "forward.fill")
+                        .font(mainSize.height < 300 ? .title3 : .title)
+                }
+            }
+            .foregroundColor(.white)
+            .frame(maxWidth: .infinity)
+            .padding(.top, 20)
+            
+            // 声音控件
+            HStack(spacing: 15) {
+                Image(systemName: "speaker.fill")
+                    .foregroundColor(.playerControl)
+                
+                Slider(value: $audioPlayer.volume, in: 0...1)
+                    .accentColor(.playerControl)
+                    .frame(height: 4)
+                
+                Image(systemName: "speaker.wave.3.fill")
+                    .foregroundColor(.playerControl)
+            }
+            .padding(.top, 20)
         }
+        .padding(.vertical, 20)
     }
-    
+
 }
 
 struct DefaultPlayerView_Previews: PreviewProvider {
+    @State static var isExpanded: Bool = true
+    
     static var previews: some View {
-        DefaultPlayerView(expandSheet: .constant(true), animation: Namespace().wrappedValue)
+        let audioPlayer = AudioPlayerManager.shared
+        audioPlayer.currentSong = Song(
+            id: 1,
+            title: "All Alone With You",
+            duration: 240,
+            filePath: Bundle.main.path(forResource: "ALL", ofType: "mp3") ?? "",
+            coverPath: Bundle.main.path(forResource: "all", ofType: "jpg") ?? "",
+            albumId: nil,
+            artistId: nil,
+            genreId: nil,
+            releaseDate: nil,
+            artistName: "EGOIST",
+            albumTitle: "Extra Terrestrial Biological Entities",
+            genreName: "Anime"
+        )
+        
+        return DefaultPlayerView(isExpanded: $isExpanded)
+            .environmentObject(audioPlayer)
             .preferredColorScheme(.dark)
+            .onAppear {
+                // 测试收起动画
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    isExpanded = false
+                }
+            }
     }
 }
 
+// MARK: - 自定义播放进度条
+struct CustomProgressBar: View {
+    @Binding var progress: TimeInterval
+    let duration: TimeInterval
+    let thumbColor: Color
+    let trackColor: Color
+    
+    @State private var isDragging: Bool = false // 是否正在拖动
+    @State private var dragProgress: TimeInterval = 0 // 拖动时的临时进度
+    
+    var body: some View {
+        GeometryReader { geometry in
+            ZStack(alignment: .leading) {
+                // 进度条轨道
+                Capsule()
+                    .foregroundColor(trackColor)
+                    .frame(height: 4)
+                
+                // 进度条填充
+                Capsule()
+                    .foregroundColor(thumbColor)
+                    .frame(
+                        width: CGFloat(
+                            (isDragging ? dragProgress : progress) / duration
+                        ) * geometry.size.width,
+                        height: 4
+                    )
+            }
+            .gesture(
+                DragGesture(minimumDistance: 0)
+                    .onChanged { value in
+                        isDragging = true
+                        let x = value.location.x
+                        let newProgress = min(max(0, x / geometry.size.width), 1)
+                        dragProgress = newProgress * duration
+                    }
+                    .onEnded { value in
+                        isDragging = false
+                        progress = dragProgress
+                        // 跳转到指定时间
+                        AudioPlayerManager.shared.seek(to: dragProgress)
+                    }
+            )
+        }
+        .frame(height: 4)
+    }
+}
+                
 // MARK: - 拓展 View
 extension View {
     // 获取设备的屏幕圆角半径

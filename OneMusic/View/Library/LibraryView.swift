@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct LibraryView: View {
-    
+    // 环境对象
     @StateObject var mainVM = MainViewModel.share
-    
+    @EnvironmentObject private var viewModel: SongViewModel // ViewModel
+    @EnvironmentObject var playlistVM: PlaylistViewModel
+    @EnvironmentObject var audioPlayer: AudioPlayerManager // 绑定播放器
     @State var selectTab: Int = 0
     
     // 全部专辑示例数据

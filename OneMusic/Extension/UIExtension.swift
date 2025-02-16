@@ -75,9 +75,9 @@ extension CGFloat {
 // MARK: - App 颜色拓展
 extension Color {
     
-    static var primaryApp: Color {
-        return Color(hex: "3674B5")
-    }
+//    static var primaryApp: Color {
+//        return Color(hex: "3674B5")
+//    }
     
     static var focus: Color {
         return Color(hex: "3674B5")
@@ -132,14 +132,14 @@ extension Color {
     static var secondaryG: [Color] {
         return [secondaryStart, secondaryEnd]
     }
-    // 背景色
-    static var bg: Color {
-        return Color(hex: "40514e")
-    }
-    // 稍微浅一点的背景
-    static var bg_light: Color {
-        return Color(hex: "43676b")
-    }
+//    // 背景色
+//    static var bg: Color {
+//        return Color(hex: "40514e")
+//    }
+//    // 稍微浅一点的背景
+//    static var bg_light: Color {
+//        return Color(hex: "43676b")
+//    }
     
     static var darkGray: Color {
         return Color(hex: "9AA6B2")
@@ -191,6 +191,24 @@ struct RoundedCorner: Shape {
     }
 }
 
+// 统一尺寸规范（基于你的 widthPer/heightPer 逻辑）
+extension CGFloat {
+    static let playerArtworkSize: CGFloat = .widthPer(per: 0.8) // 封面尺寸
+    static let controlButtonSize: CGFloat = 44 // 控制按钮统一尺寸
+}
+
+// 系统颜色设置
+extension Color {
+    // 主色系调整建议（保持你的主题色系，但增强对比度）
+    static var primaryApp: Color { Color(hex: "3674B5") } // 保持主色不变
+    static var bg: Color { Color(hex: "40514e") } // 背景色
+    static var bg_light: Color { Color(hex: "43676b") } // 浅背景
+    
+    // 新增播放器专用色
+    static var playerControl: Color { Color(hex: "73C7C7") } // 控制按钮色
+    static var progressTrack: Color { Color.primaryText28 } // 进度条轨道
+    static var progressThumb: Color { Color.org } // 进度条滑块
+}
 
 // MARK: -侧滑返回逻辑拓展
 /**

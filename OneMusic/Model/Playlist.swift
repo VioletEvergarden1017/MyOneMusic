@@ -11,4 +11,5 @@ struct Playlist: Identifiable {
     let id: Int64
     let name: String
     var songs: [Song] = []
+    var coverPath: String? //封面路径可选
 }

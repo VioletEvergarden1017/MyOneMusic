@@ -103,7 +103,7 @@ struct AlbumDetailsView: View {
                     ForEach(0..<demoAlbum.count, id: \.self) { index in
                         let sObj = demoAlbum[index] as?NSDictionary ?? [:]
                         
-                        AlbumnSongRow(sObj: sObj, index: index, isPlay: false)
+//                        AlbumnSongRow(sObj: sObj, index: index, isPlay: false)
                     }
                 }
 

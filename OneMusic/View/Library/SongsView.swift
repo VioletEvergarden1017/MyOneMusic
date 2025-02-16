@@ -9,97 +9,50 @@ import SwiftUI
 
 struct SongsView: View {
     @Environment(\.presentationMode) var presentationMode // 声明页面环境参数
-    @ObservedObject private var viewModel = SongViewModel() // ViewModel
+    @EnvironmentObject private var viewModel: SongViewModel // ViewModel
+    @EnvironmentObject var playlistVM: PlaylistViewModel
+    @EnvironmentObject var audioPlayer: AudioPlayerManager // 绑定播放器
     @State var searchText: String = "" // 需要搜索的歌曲名字
-    // all songs示例数据
-    @State var allArr: NSArray = [
-        [
-            
-            "image": "s1",
-            "name": "Billie Jean",
-            "artist": "Michael Jackson"
-        ],
-        [
-            "image": "s2",
-            "name": "Be the girl",
-            "artist": "Bebe Rexa"
-        ],
-        [
-            "image": "s3",
-            "name": "Countryman",
-            "artist": "Daughtry"
-        ],
-        [
-            "image": "s4",
-            "name": "Do you feel lonelyness",
-            "artist": "Marc Anthony"
-        ],
-        [
-            "image": "s5",
-            "name": "Earth song",
-            "artist": "Michael Jackson"
-        ],
-        [
-            "image": "s6",
-            "name": "Smooth criminal",
-            "artist": "Michael Jackson"
-        ],
-        [
-            "image": "s7",
-            "name": "The way you make me feel",
-            "artist": "Michael Jackson"
-        ],
-        
-        [
-            "image": "s9",
-            "name": "Somebody that I used to know",
-            "artist": "Gotye"
-        ],
-        [
-            "image": "s10",
-            "name": "Wild Thoughts",
-            "artist": "Michael Jackson"
-        ]
-    ]
     
-//    var mysongs: [Song] = [
-//        Song(id: 1, title: "I", artistId: 1, albumId: 1, artistName: "Athelics", genreId: 1, duration: 1, filePath: "/Users/zhiye/Documents/OneMusicLibrary/Who You Are Is Not Enough/I.mp3", coverImage: "/Users/zhiye/Documents/OneMusicLibrary/Who You Are Is Not Enough/WhoYouAreIsNotEnough.png"),
-//        Song(id: 2, title: "II (Find Yourself)", artistId: 1, albumId: 1, artistName: "Athelics", genreId: 1, duration: 2, filePath: "/Users/zhiye/Documents/OneMusicLibrary/Who You Are Is Not Enough/II (Find Yourself).mp3", coverImage: "/Users/zhiye/Documents/OneMusicLibrary/Who You Are Is Not Enough/WhoYouAreIsNotEnough.png"),
-//        Song(id: 3, title: "II)", artistId: 1, albumId: 1, artistName: "Athelics", genreId: 1, duration: 3, filePath: "/Users/zhiye/Documents/OneMusicLibrary/Who You Are Is Not Enough/II.mp3", coverImage: "/Users/zhiye/Documents/OneMusicLibrary/Who You Are Is Not Enough/WhoYouAreIsNotEnough.png"),
-//        Song(id: 4, title: "III (Find Yourself)", artistId: 1, albumId: 1, artistName: "Athelics", genreId: 1, duration: 4, filePath: "/Users/zhiye/Documents/OneMusicLibrary/Who You Are Is Not Enough/III (Find Yourself) .mp3", coverImage: "/Users/zhiye/Documents/OneMusicLibrary/Who You Are Is Not Enough/WhoYouAreIsNotEnough.png"),
-//        Song(id: 5, title: "III", artistId: 1, albumId: 1, artistName: "Athelics", genreId: 1, duration: 5, filePath: "/Users/zhiye/Documents/OneMusicLibrary/Who You Are Is Not Enough/III.mp3", coverImage: "/Users/zhiye/Documents/OneMusicLibrary/Who You Are Is Not Enough/WhoYouAreIsNotEnough.png"),
-//        Song(id: 6, title: "IV", artistId: 1, albumId: 1, artistName: "Athelics", genreId: 1, duration: 6, filePath: "/Users/zhiye/Documents/OneMusicLibrary/Who You Are Is Not Enough/IV.mp3", coverImage: "/Users/zhiye/Documents/OneMusicLibrary/Who You Are Is Not Enough/WhoYouAreIsNotEnough.png"),
-//    ]
-    
-    
+//    let songExample = Song(
+//        id: 1,
+//        title: "Example Song",
+//        duration: 234,
+//        filePath: "/path/to/song.mp3",
+//        coverPath: Bundle.main.path(forResource: "preview_cover_1", ofType: "jpg"),
+//        albumId: nil,
+//        artistId: nil,
+//        genreId: nil,
+//        releaseDate: nil,
+//        artistName: "EGOIST",
+//        albumTitle: "Native",
+//        genreName: "Pop"
+//    )
+
     var body: some View {
         NavigationStack {
-            
             VStack{
                 MySearchBar(text: $searchText)
                     .padding(.top, 120)
-//                    .onTapGesture {
-//                        for song in mysongs {
-//                            viewModel.addSong(song: song)
-//                        }
-//                    }
-                //Divider()
-                
-//                Button {
-//                    testAdd()
-//                } label: {
-//                    Text("Add all song")
-//                }
 
-                
                 ScrollView {
-                    ForEach(0..<viewModel.songs.count, id: \.self) { index in
-                        
-                        let sObj = viewModel.songs[index]
-                        
-                        SongsCell(sObj: sObj)
+                    VStack {
+                        // 确保使用 viewModel.songs 中的数据
+                        ForEach(viewModel.songs) { song in
+                            SongsCell(sObj: song)
+                                .environmentObject(audioPlayer) // 传递播放器
+                                .environmentObject(playlistVM)
+                                .onAppear {
+                                    print("1.songsCell被调用，这个视图在加载")
+                                }
+                                .onDisappear {
+                                    print("2.被删除，数据被删除了")
+                                }
+                        }
+
                     }
                 }
+                .frame(height: 500)
                 
                 Spacer()
             }
@@ -117,6 +70,15 @@ struct SongsView: View {
                     .font(.customfont(.bold, fontSize: 17))
                     .foregroundColor(Color.primaryText80)
             }
+        }
+        .onAppear {
+            print("SongsView appeared with \(viewModel.songs.count) songs")
+            print("环境对象状态：",
+                  "playlistVM: \(playlistVM)",
+                  "audioPlayer: \(audioPlayer)")
+        }
+        .onDisappear {
+            print("SongsView disappeared")
         }
 
     }
@@ -136,15 +98,9 @@ struct SongsView: View {
                     .font(.customfont(.regular, fontSize: 17))
                     .foregroundColor(Color(hex: "C3FFCC"))
             }
-            //.padding(.horizontal)
         }
     }
 
-//    private func testAdd() {
-//        for song in mysongs {
-//            viewModel.addSong2(song: song)
-//        }
-//    }
 }
 
 
@@ -184,7 +140,82 @@ struct MySearchBar: View {
         
     }
 }
-
+/**
+ *日志： 解决了困扰了一天的初始化问题，为什么两个cell一直不能加载现在终于解决了。问题根源在于 SongViewModel
+ *的初始化逻辑与预览模式的数据设置存在冲突。当 SongViewModel 实例化时，其 init() 方法会立即调用
+ *loadSongs()，而默认情况下 shouldLoadFromDatabase true，这会导致异步加载数据库数据的操作覆盖手动设置的测试数据。
+ *SongViewModel 的 init() 方法会触发 loadSongs()，而默认 shouldLoadFromDatabase = true，导致异步加载覆盖手动设置的 songs。即使预览中设置了 songVM.shouldLoadFromDatabase = false，初始化的异步操作可能已在执行，最终覆盖手动数据。
+ *在预览中创建 SongViewModel 时，直接传递 shouldLoadFromDatabase: false，确保初始化时不触发 loadSongs()。
+ */
 #Preview {
-    SongsView()
+    // 创建 SongViewModel 时跳过初始化
+    let songVM = SongViewModel(shouldLoadFromDatabase: false)
+    let playlistVM = PlaylistViewModel()
+    let audioPlayer = AudioPlayerManager.shared
+    
+    // 创建真实测试数据
+   let song1 = Song(
+       id: 1,
+       title: "All Alone With You",
+       duration: 35,
+       filePath: "/Users/zhiye/Downloads/6005970A0Q9.mp3",
+       coverPath: "/Users/zhiye/Downloads/EGOIST-All-Alone-With-You.jpg",
+       albumId: nil,
+       artistId: nil,
+       genreId: nil,
+       releaseDate: nil,
+       artistName: "EGOIST111",
+       albumTitle: "Extra Terrestrial Biological Entities",
+       genreName: "Anime"
+   )
+       
+   let song2 = Song(
+       id: 2,
+       title: "Bible",
+       duration: 240,
+       filePath: "/Users/zhiye/Downloads/ENDER LILIES Quietus of the Knights Original Soundtrack/Bulbel.mp3",
+       coverPath: "/Users/zhiye/Downloads/enderlilies.jpg",
+       albumId: nil,
+       artistId: nil,
+       genreId: nil,
+       releaseDate: nil,
+       artistName: "Mili",
+       albumTitle: "Sample Album",
+       genreName: "Anime"
+   )
+       
+    // MARK: - 强制刷新数据
+    songVM.songs = [song1, song2]
+    songVM.shouldLoadFromDatabase = false // 禁止从数据库加载数据
+    
+    playlistVM.playlists = [
+        Playlist(
+            id: 1,
+            name: "我的最爱",
+            songs: [song1, song2], // 包含测试歌曲
+            coverPath: "/Users/zhiye/Downloads/enderlilies.jpg"
+        )
+    ]
+    
+    // MARK: - 添加调试输出
+    print("歌曲数量: \(songVM.songs.count)")
+    print("封面路径是否存在: \(FileManager.default.fileExists(atPath: song1.coverPath ?? ""))")
+    
+    // 设置当前播放器歌曲
+    audioPlayer.currentSong = songVM.songs.first
+    // 设置当前播放队列为songVM.songs最终实现播放的功能
+    playlistVM.currentPlaylistSongs = songVM.songs
+    
+    return VStack {
+        SongsView()
+            .environmentObject(songVM)
+            .environmentObject(playlistVM)
+            .environmentObject(audioPlayer)
+        // 显示悬浮播放胶囊
+        MusicPillView()
+            .environmentObject(audioPlayer)
+    }
+    .background(Color.bg)
 }
+
+

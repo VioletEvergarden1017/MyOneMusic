@@ -8,24 +8,11 @@
 import SwiftUI
 
 struct PlaylistDetailView: View {
-    
+    // 状态变量
+    @EnvironmentObject var playlistVM: PlaylistViewModel
     @Environment(\.presentationMode) var presentationMode // 声明页面环境参数: 展示状态
-    // 示例数据
-    @State var demoAlbum: NSArray = [
-        ["duration": "3:56", "name": "Billie Jean", "artists": "Michael Jackson"],
-        ["duration": "3:56", "name": "Earth Song", "artists": "Michael Jackson"],
-        ["duration": "3:56", "name": "Mirror", "artists": "Justin Timberlake"],
-        ["duration": "3:56", "name": "Remember the Time","artists": "Michael Jackson"],
-        ["duration": "3:56", "name": "Billie Jean", "artists": "Michael Jackson"],
-        ["duration": "3:56", "name": "Earth Song", "artists": "Michael Jackson"],
-        ["duration": "3:56", "name": "Mirror", "artists": "Justin Timberlake"],
-        ["duration": "3:56", "name": "Remember the Time","artists": "Michael Jackson"],
-        ["duration": "3:56", "name": "Billie Jean", "artists": "Michael Jackson"],
-        ["duration": "3:56", "name": "Earth Song", "artists": "Michael Jackson"],
-        ["duration": "3:56", "name": "Mirror", "artists": "Justin Timberlake"],
-        ["duration": "3:56", "name": "Remember the Time","artists": "Michael Jackson"]
-    ]
     var isPlay: Bool = false
+    let playlist: Playlist
     
     var body: some View {
         
@@ -42,17 +29,17 @@ struct PlaylistDetailView: View {
                     // 文字内容
                     VStack(spacing: 1) {
                         // 歌单明
-                        Text("Favorite Songs")
+                        Text(playlist.name)
                             .font(.customfont(.bold, fontSize: 23))
                             .foregroundColor(Color.primaryText)
                             .lineLimit(1)
                         // 更新时间
-                        Text("Updated 3hr ago")
+                        Text("Updated \(formattedUpdateTime())")
                             .font(.customfont(.bold, fontSize: 14))
                             .foregroundColor(Color.primaryText35)
                             .lineLimit(1)
                         // 歌单统计信息
-                        Text("37 songs, 3 hours 18 minutes")
+                        Text("\(playlist.songs.count) songs, \(totalDurationString())")
                             .font(.customfont(.regular, fontSize: 14))
                             .foregroundColor(.primaryText28)
                             .frame(width: 240)
@@ -100,12 +87,11 @@ struct PlaylistDetailView: View {
 
                 }
                 
-                // 专辑曲目部分
+                // 歌单曲目部分
                 LazyVStack {
-                    ForEach(0..<demoAlbum.count, id: \.self) { index in
-                        let sObj = demoAlbum[index] as?NSDictionary ?? [:]
+                    ForEach(playlistVM.currentPlaylistSongs) { song in
                         
-                        AlbumnSongRow(sObj: sObj, index: index, isPlay: false)
+                        AlbumnSongRow(song: song)
                     }
                 }
 
@@ -177,8 +163,36 @@ struct PlaylistDetailView: View {
         }
 
     }
+    
+    // MARK: - 歌单计算属性
+    // 新增计算属性
+    private func formattedUpdateTime() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm"
+        return formatter.string(from: Date())
+    }
+
+    private func totalDurationString() -> String {
+        let totalSeconds = playlist.songs.reduce(0) { $0 + $1.duration }
+        let hours = totalSeconds / 3600
+        let minutes = (totalSeconds % 3600) / 60
+        return "\(hours)h \(minutes) min"
+    }
 }
 
+
 #Preview {
-    PlaylistDetailView()
+    let vm = PlaylistViewModel()
+    
+    // 创建测试数据
+    let testSongs = PreviewData.testSongs()
+    let testPlaylist = Playlist(id: 1, name: "我的最爱", songs: testSongs, coverPath: nil)
+    let emptyPlaylist = Playlist(id: 2, name: "空歌单", songs: [], coverPath: nil)
+    // 绑定数据
+    vm.playlists = [testPlaylist, emptyPlaylist]
+    vm.currentPlaylistSongs = testSongs
+    vm.currentPlaylistId = testPlaylist.id
+    
+    return PlaylistDetailView(playlist: emptyPlaylist)
+        .environmentObject(vm)
 }

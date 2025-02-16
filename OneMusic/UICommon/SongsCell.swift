@@ -8,63 +8,87 @@
 import SwiftUI
 
 struct SongsCell: View {
-    @State var sObj: Song = Song(id: 34, title: "CountingStars", duration: 345, filePath: "/Users/zhiye/Downloads/6005970A0Q9.mp3", coverPath: "/Users/zhiye/Downloads/EGOIST-All-Alone-With-You.jpg", albumId: nil, artistId: nil, genreId: nil, releaseDate: nil)
-
+    // MARK: - 环境变量
+    let sObj: Song // 修改为不可变属性
+    // 添加 PlaylistViewModel 以支持添加到歌单功能
+    @EnvironmentObject var playlistVM: PlaylistViewModel
+    @EnvironmentObject var audioPlayer: AudioPlayerManager
+    
     var body: some View {
-        HStack {
-            
-            // 歌曲图片
-            if let uiImage = UIImage(contentsOfFile: sObj.coverPath ?? "") {
-                Image(uiImage: uiImage)
+        Button(action: {
+            // 设置播放队列并播放当前歌曲
+            print("你按下了SongCell:调制文字，设置播放队列并播放当前你按下的歌曲")
+            DispatchQueue.main.async {
+                audioPlayer.setupQueue(tracks: playlistVM.currentPlaylistSongs, startIndex: playlistVM.currentPlaylistSongs.firstIndex(of: sObj) ?? 0)
+                audioPlayer.playPause()
+            }
+        }) {
+            HStack {
+                // 对封面加载惊喜优化
+                Group {
+                    if let uiImage = UIImage(contentsOfFile: sObj.coverPath ?? "") {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFit()
+                    } else {
+                        Image("default_cover")
+                            .resizable()
+                            .scaledToFit()
+                    }
+                }
+                .frame(width: 64, height: 64)
+                .cornerRadius(8)
+                
+                // MARK: - 歌曲信息
+                VStack(alignment: .leading) {
+                    Text(sObj.title)
+                        .font(.customfont(.regular, fontSize: 17))
+                        .foregroundColor(Color.primaryText)
+                        .lineLimit(1)
+                    Text(sObj.artistName ?? "Unkonwn Artist")
+                        .font(.customfont(.regular, fontSize: 13))
+                        .foregroundColor(Color.primaryText35)
+                        .lineLimit(1)
+                }
+                
+                Spacer()
+                
+                Image("more")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 64, height: 64)
-                    .cornerRadius(8)
+                    .frame(width: 32, height: 32)
+                    .padding(.trailing, 10)
             }
-            // 歌曲文字部分
-            VStack(alignment: .leading) {
-                
-                Text(sObj.title)
-                    .font(.customfont(.regular, fontSize: 17))
-                    .foregroundColor(Color.primaryText)
-                    .lineLimit(1)
-                Text("singer name")
-                    .font(.customfont(.regular, fontSize: 13))
-                    .foregroundColor(Color.primaryText35)
-                    .lineLimit(1)
-            }
-            
-            Spacer()
-            
-            Image("more")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 32, height: 32)
-                .padding(.trailing, 10)
-        }
-        .background(Color.bg)
-        .padding(.horizontal, 20)
-        .frame(maxWidth: .infinity, maxHeight: 72)
-        // 长按菜单
-        .contextMenu {
-            VStack {
-                MenuTextBtn(text: "Play", img: "rm_play")
-                Divider()
-                MenuTextBtn(text: "Delete from Library", img: "rm_delete")
-                MenuTextBtn(text: "DownLoad", img: "rm_download")
-                MenuTextBtn(text: "Add to Playlist...", img: "rm_add_list")
-                Divider()
-                MenuTextBtn(text: "Play Next", img: "rm_play")
-                MenuTextBtn(text: "Play Last", img: "rm_play")
-                Divider()
-                MenuTextBtn(text: "Share Album...", img: "rm_share")
-                MenuTextBtn(text: "Go to Artist", img: "rm_play")
-                Divider()
-                MenuTextBtn(text: "Favorite", img: "rm_star")
-                MenuTextBtn(text: "Suggest Less", img: "rm_thumb_down")
-            }
-        }
+            .background(Color.bg_light)
+            .padding(.horizontal, 20)
 
+            .frame(maxWidth: .infinity, maxHeight: 72)
+            // 长按菜单
+            .contextMenu {
+                // 添加到歌单菜单
+                Menu("添加到歌单") {
+                    ForEach(playlistVM.playlists) { playlist in
+                        Button(playlist.name) {
+                            playlistVM.addCurrentSongToPlaylist(songId: sObj.id)
+                        }
+                    }
+                }
+                
+                // 其他操作
+                Button("删除") {
+                    // 调用删除逻辑
+                }
+            }
+        }
+        .cornerRadius(8)
+        // 生命周期监控
+        .onAppear {
+            print("环境对象状态：",
+                  "playlistVM: \(playlistVM)",
+                  "audioPlayer: \(audioPlayer)")
+            print("歌曲单元格出现：\(sObj.title)")
+        }
+        .onDisappear { print("歌曲单元格消失：\(sObj.title)") }
     }
 }
 
@@ -92,6 +116,30 @@ private struct MenuTextBtn: View {
     }
 }
 
-#Preview {
-    SongsCell()
+#Preview("歌曲单元格") {
+    let song = Song(
+        id: 1,
+        title: "Counting Stars",
+        duration: 234,
+        filePath: "/Users/zhiye/Downloads/6005970A0Q9.mp3",
+        coverPath: Bundle.main.path(forResource: "preview_cover_1", ofType: "jpg"),
+        albumId: nil,
+        artistId: nil,
+        genreId: nil,
+        releaseDate: nil,
+        artistName: "OneRepublic",
+        albumTitle: "Native",
+        genreName: "Pop"
+    )
+    let a_vm = AudioPlayerManager.shared
+    let vm = PlaylistViewModel()
+    vm.playlists = [
+        Playlist(id: 1, name: "我的最爱", songs: [], coverPath: nil),
+        Playlist(id: 2, name: "最近添加", songs: [], coverPath: nil)
+    ]
+    vm.currentPlaylistSongs = [song]
+    return SongsCell(sObj: song)
+        .environmentObject(vm)
+        .environmentObject(a_vm)
+        //.background(Color.bg)
 }

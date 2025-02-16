@@ -17,7 +17,7 @@ class DatabaseManager {
         let fileURL = try! FileManager.default
             .url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
             .appendingPathComponent("musicDB.sqlite")
-        
+        //print("\(fileURL)")
         if sqlite3_open(fileURL.path, &db) != SQLITE_OK {
             print("Error opening database")
             return

@@ -9,6 +9,12 @@ import SwiftUI
 
 struct PlaylistsView: View {
     @Environment(\.presentationMode) var presentationMode // 声明页面环境参数
+    @EnvironmentObject var playlistVM: PlaylistViewModel // 使用ViewModel
+    
+    // 状态变量
+    @State private var showCreateAlert = false // 新建歌单弹窗
+    @State private var newPlaylistName = ""    // 新歌单名字
+    @State private var newPlaylistcover = ""   // 新歌单封面路径
     @State var searchText: String = "" // 需要搜索的歌单名字
     // 歌单示例数据
     @State var myPlaylists: NSArray = [
@@ -26,13 +32,11 @@ struct PlaylistsView: View {
                 
                 // 歌单
                 ScrollView {
-                    ForEach(0..<myPlaylists.count, id: \.self) { index in
-                        let sObj = myPlaylists[index] as? NSDictionary ?? [:]
-                        
+                    ForEach(playlistVM.playlists) { playlist in
                         NavigationLink {
-                            PlaylistDetailView()
+                            PlaylistDetailView(playlist: playlist)
                         } label: {
-                            PlaylistRow(sObj: sObj)
+                            PlaylistRow(playlist: playlist)
                         }
                         
                     }
@@ -85,14 +89,23 @@ struct PlaylistsView: View {
     private var newBtn: some View {
         Button {
             // 将专辑添加至资料库
-            
+            showCreateAlert.toggle()
         } label: {
             Image("navi_add")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 25, height: 25)
         }
-
+        .alert("新建歌单", isPresented: $showCreateAlert) {
+            TextField("Name", text: $newPlaylistName)
+            TextField("Coverpath", text: $newPlaylistcover)
+            Button("创建") {
+                guard !newPlaylistName.isEmpty else { return }
+                playlistVM.createPlaylist(name: newPlaylistName)
+                newPlaylistName = ""
+            }
+            Button("Cancel", role: .cancel) {}
+        }
     }
     
     // MARK: - 排序按钮
@@ -142,6 +155,17 @@ private struct PlaylistSortMenu: View {
 
     }
 }
+
 #Preview {
-    PlaylistsView()
+    let vm = PlaylistViewModel()
+    vm.currentPlaylistId = 2
+    vm.playlists = [
+        PreviewData.testPlaylists(),
+        Playlist(
+            id: 2,
+            name: "我的最爱",
+            songs: PreviewData.testSongs(),
+            coverPath: "/Users/zhiye/Downloads/032981110B28104181EAF2562E102574.png")]
+    return PlaylistsView()
+        .environmentObject(vm)
 }

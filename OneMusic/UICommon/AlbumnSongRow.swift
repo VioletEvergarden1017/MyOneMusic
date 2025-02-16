@@ -6,67 +6,58 @@
 //
 
 import SwiftUI
-// 播放 GIF 依赖项
-import GIFImage
 
 struct AlbumnSongRow: View {
-    @State var sObj: NSDictionary = [:]
+    @EnvironmentObject var playlistVM: PlaylistViewModel
+    let song: Song // 使用 Song 模型
     var index: Int = 1
     var isPlay: Bool = false
-    let gifPath = Bundle.main.path(forResource: "wave", ofType: "gif")
     
     var body: some View {
-        VStack {
-            HStack(spacing: 15) {
-                
-                Text(String(index))
-                    .font(.customfont(.regular, fontSize: 17))
-                    .foregroundColor(Color.primaryText60)
-                    .frame(alignment: .leading)
-                Text(sObj.value(forKey: "name") as? String ?? "")
-                    .font(.customfont(.regular, fontSize: 17))
-                    .foregroundColor(Color.primaryText)
-                Spacer()
-                Text(sObj.value(forKey: "duration") as? String ?? "")
+        HStack(spacing: 15) {
+            Text("\(index)")
+                .font(.customfont(.regular, fontSize: 17))
+                .foregroundColor(Color.primaryText60)
+            
+            VStack(alignment: .leading) {
+                Text(song.title)
                     .font(.customfont(.regular, fontSize: 17))
                     .foregroundColor(Color.primaryText)
-                
-                if(isPlay) {
-//                    Image("audio_wave")
-//                        .resizable()
-//                        .scaledToFit()
-//                        .frame(width: 80, height: 40, alignment: .center)
-//                    GIFImage(source: .local(filePath: gifPath!))
-//                        .background(Color.bg)
-                }else{
-                    Menu {
-                        MenuTextBtn(text: "Play", img: "rm_play")
-                        Divider()
-                        MenuTextBtn(text: "Delete from Library", img: "rm_delete")
-                        MenuTextBtn(text: "DownLoad", img: "rm_download")
-                        MenuTextBtn(text: "Add to Playlist...", img: "rm_add_list")
-                        Divider()
-                        MenuTextBtn(text: "Play Next", img: "rm_play")
-                        MenuTextBtn(text: "Play Last", img: "rm_play")
-                        Divider()
-                        MenuTextBtn(text: "Share Sony...", img: "rm_share")
-                        MenuTextBtn(text: "Go to Artist", img: "rm_play")
-                        Divider()
-                        MenuTextBtn(text: "Favorite", img: "rm_star")
-                    } label: {
-                        Image( "more")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 25, height: 25)
-                    }
-                    .frame(width: 80, height: 40, alignment: .trailing)
-                }
             }
             
-            Divider()
-                .padding(.leading, 50)
+            Spacer()
+            
+            Text(formatDuration(song.duration))
+                .font(.customfont(.regular, fontSize: 17))
+                .foregroundColor(Color(hex: "#8aae92"))
         }
-        .frame(width:.screenWidth - 40, height: 44)
+        .padding(.horizontal, 20)
+        .frame(height: 45)
+        // 更多操作按钮...
+        .contextMenu {
+            // 添加到歌单菜单
+            Menu("添加到歌单") {
+                ForEach(playlistVM.playlists) { playlist in
+                    Button(playlist.name) {
+                        playlistVM.addCurrentSongToPlaylist(songId: song.id)
+                    }
+                }
+            }
+            Divider()
+            // 从当前歌单移除（如果有当前歌单）
+            if let currentPlaylistId = playlistVM.currentPlaylistId {
+                Button("从本歌单移除") {
+                    playlistVM.removeSongFromCurrentPlaylist(songId: song.id)
+                }
+            }
+        }
+        
+    }
+    // 格式化歌曲时长
+    private func formatDuration(_ duration: Int) -> String {
+        let minutes = duration / 60
+        let seconds = duration % 60
+        return String(format: "%d:%02d", minutes, seconds)
     }
 }
 
@@ -95,7 +86,27 @@ private struct MenuTextBtn: View {
 }
 
 #Preview {
-        AlbumnSongRow(sObj:["duration": "3:56", "name": "I (Find Yourself)"] )
-        .background(Color.bg)
-        .padding(.bottom, 200 )
+    let vm = PlaylistViewModel()
+    vm.playlists = [
+        Playlist(id: 1, name: "我的最爱", songs: [], coverPath: nil),
+        Playlist(id: 2, name: "最近添加", songs: [], coverPath: nil)
+    ]
+    vm.currentPlaylistId = 1
+    return AlbumnSongRow(song: Song(
+        id: 34,
+        title: "CountingStars",
+        duration: 345,
+        filePath: "/Users/zhiye/Downloads/6005970A0Q9.mp3",
+        coverPath: "/Users/zhiye/Downloads/EGOIST-All-Alone-With-You.jpg",
+        albumId: nil,
+        artistId: nil,
+        genreId: nil,
+        releaseDate: nil,
+        artistName: "OneRepublic",
+        albumTitle: "Native",
+        genreName: "Pop"
+    ))
+    .environmentObject(vm)
+    .background(Color.bg)
+    .padding(.bottom, 200)
 }
