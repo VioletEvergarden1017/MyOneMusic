@@ -8,6 +8,11 @@
 
 import AVFoundation
 
+// MARK: - 统一播放协议
+protocol PlayableSource {
+    var queue: [Song] { get }      // 队列中的歌曲列表
+}
+
 class AudioPlayerManager: ObservableObject {
     static let shared = AudioPlayerManager()
     
@@ -26,6 +31,17 @@ class AudioPlayerManager: ObservableObject {
     // 字段更新时间 2.16
     private var queue: [Song] = []    // 播放队列
     private var currentIndex: Int = 0 // 当前播放的歌曲索引
+
+    // MARK: - 设置播放队列
+    func setupQueue(tracks: [Song], startIndex: Int = 0) {
+        guard !tracks.isEmpty, startIndex >= 0, startIndex < tracks.count else {
+            print("队列为空或索引越界")
+            return
+        }
+        queue = tracks
+        currentIndex = startIndex
+        loadSong(queue[currentIndex])
+    }
     
     // 加载歌曲
     func loadSong(_ song: Song) {
@@ -77,14 +93,8 @@ class AudioPlayerManager: ObservableObject {
     }
 }
 
+// 播放列表控制
 extension AudioPlayerManager {
-    
-    // MARK: - 设置播放队列
-    func setupQueue(tracks: [Song], startIndex: Int = 0) {
-        queue = tracks
-        currentIndex = startIndex
-        loadSong(queue[currentIndex])
-    }
     
     // 播放下一首
     func playNext() {

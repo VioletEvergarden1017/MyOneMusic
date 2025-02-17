@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AlbumsView: View {
-    
+    // MARK: - 环境变量设置
     @Environment(\.presentationMode) var presentationMode // 声明页面环境参数
     @State var searchText: String = "" // 需要搜索的歌曲名字
     // 专辑示例数据
@@ -71,7 +71,7 @@ struct AlbumsView: View {
                             let sObj = allAlb[index] as? NSDictionary ?? [:]
                             
                             NavigationLink {
-                                AlbumDetailsView()
+                                //AlbumDetailsView()
                             } label: {
                                 RecentlyAddCell(sObj: sObj)
                             }

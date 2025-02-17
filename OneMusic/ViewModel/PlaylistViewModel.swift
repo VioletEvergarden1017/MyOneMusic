@@ -13,18 +13,31 @@ class PlaylistViewModel: ObservableObject {
     @Published var currentPlaylistSongs: [Song] = []
     @Published var currentPlaylistId: Int64? // 当前歌单ID
     
+    // MARK: - 标志位，用于控制是否从数据库当中读取数据，还是单纯在preview当中显示
+    var shouldLoadPlaylistFromDatabase: Bool = true
+    
+    // 添加一个初始化方法，用于在 Preview 中手动设置数据
+    init(playlists: [Playlist] = [], currentPlaylistSongs: [Song] = [], currentPlaylistId: Int64? = nil) {
+        self.playlists = playlists
+        self.currentPlaylistSongs = currentPlaylistSongs
+        self.currentPlaylistId = currentPlaylistId
+    }
+    
     // 加载所有歌单
-    func loadPlaylists() {
-        do {
-            playlists = try DatabaseManager.shared.fetchPlaylists()
-            // 加载每个歌单的歌曲数量
-            for i in 0..<playlists.count {
-                // 因为要更新歌单detailed view 所以需要同时加载歌单里的歌词
-                playlists[i].songs = try DatabaseManager.shared.fetchSongsForPlaylist(playlistId: playlists[i].id)
+    func loadPlaylists(shouldLoadPlaylistFromDatabase: Bool = true) {
+        self.shouldLoadPlaylistFromDatabase = shouldLoadPlaylistFromDatabase
+        if shouldLoadPlaylistFromDatabase {
+            do {
+                playlists = try DatabaseManager.shared.fetchPlaylists()
+                // 加载每个歌单的歌曲数量
+                for i in 0..<playlists.count {
+                    // 因为要更新歌单detailed view 所以需要同时加载歌单里的歌词
+                    playlists[i].songs = try DatabaseManager.shared.fetchSongsForPlaylist(playlistId: playlists[i].id)
+                }
+            } catch {
+                print("Error loading playlists: \(error)")
             }
-        } catch {
-            print("Error loading playlists: \(error)")
-        }
+        } else { print("预览模式跳过初始化") }
     }
     
     // 创建新歌单
@@ -129,4 +142,9 @@ extension PlaylistViewModel {
 }
 
 // MARK: - 统一播放协议拓展
+extension PlaylistViewModel: PlayableSource {
+    var queue: [Song] {
+        currentPlaylistSongs // 当前歌单的歌曲列表
+    }
+}
 

@@ -10,6 +10,7 @@ import SwiftUI
 struct PlaylistDetailView: View {
     // 状态变量
     @EnvironmentObject var playlistVM: PlaylistViewModel
+    @EnvironmentObject var audioPlayer: AudioPlayerManager
     @Environment(\.presentationMode) var presentationMode // 声明页面环境参数: 展示状态
     var isPlay: Bool = false
     let playlist: Playlist
@@ -21,11 +22,13 @@ struct PlaylistDetailView: View {
             ScrollView {
                 // MARK: - 歌单信息部分
                 VStack(alignment: .center,spacing: 10) {
-                    Image("alb_1")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 256, height: 256)
-                        .cornerRadius(16)
+                    if let uiImage = UIImage(contentsOfFile: playlist.coverPath ?? "") {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 256, height: 256)
+                            .cornerRadius(16)
+                    }
                     // 文字内容
                     VStack(spacing: 1) {
                         // 歌单明
@@ -88,10 +91,17 @@ struct PlaylistDetailView: View {
                 }
                 
                 // 歌单曲目部分
-                LazyVStack {
+                VStack {
                     ForEach(playlistVM.currentPlaylistSongs) { song in
-                        
-                        AlbumnSongRow(song: song)
+                        PlaylistSongRow(song: song)
+                            .environmentObject(audioPlayer)
+                            .environmentObject(playlistVM)
+                            .onAppear {
+                                print("歌曲单元格出现")
+                            }
+                            .onDisappear {
+                                print("歌曲单元格消失")
+                            }
                     }
                 }
 
@@ -182,17 +192,48 @@ struct PlaylistDetailView: View {
 
 
 #Preview {
-    let vm = PlaylistViewModel()
-    
+    let playlistVM = PlaylistViewModel()
+    let audioPlayer = AudioPlayerManager.shared
+    // 创建真实测试数据
+    let song1 = Song(
+       id: 1,
+       title: "All Alone With You",
+       duration: 35,
+       filePath: "/Users/zhiye/Downloads/6005970A0Q9.mp3",
+       coverPath: "/Users/zhiye/Downloads/EGOIST-All-Alone-With-You.jpg",
+       albumId: nil,
+       artistId: nil,
+       genreId: nil,
+       releaseDate: nil,
+       artistName: "EGOIST",
+       albumTitle: "Extra Terrestrial Biological Entities",
+       genreName: "Anime"
+   )
+    let song2 = Song(
+       id: 2,
+       title: "Bible",
+       duration: 240,
+       filePath: "/Users/zhiye/Downloads/ENDER LILIES Quietus of the Knights Original Soundtrack/Bulbel.mp3",
+       coverPath: "/Users/zhiye/Downloads/enderlilies.jpg",
+       albumId: nil,
+       artistId: nil,
+       genreId: nil,
+       releaseDate: nil,
+       artistName: "Mili",
+       albumTitle: "Sample Album",
+       genreName: "Anime"
+   )
+
     // 创建测试数据
-    let testSongs = PreviewData.testSongs()
-    let testPlaylist = Playlist(id: 1, name: "我的最爱", songs: testSongs, coverPath: nil)
+    let testSongs = [song1, song2]
+    let testPlaylist = Playlist(id: 1, name: "我的最爱", songs: testSongs, coverPath: "/Users/zhiye/Downloads/preview_cover_6.jpg")
     let emptyPlaylist = Playlist(id: 2, name: "空歌单", songs: [], coverPath: nil)
     // 绑定数据
-    vm.playlists = [testPlaylist, emptyPlaylist]
-    vm.currentPlaylistSongs = testSongs
-    vm.currentPlaylistId = testPlaylist.id
+    playlistVM.playlists = [testPlaylist, emptyPlaylist]
+    playlistVM.currentPlaylistSongs = testSongs
+    playlistVM.currentPlaylistId = testPlaylist.id
     
-    return PlaylistDetailView(playlist: emptyPlaylist)
-        .environmentObject(vm)
+    return PlaylistDetailView(playlist: testPlaylist)
+        .environmentObject(playlistVM)
+        .environmentObject(audioPlayer)
 }

@@ -8,55 +8,21 @@
 import SwiftUI
 
 struct AlbumDetailsView: View {
+    // MARK: - 页面环境变量
+    @EnvironmentObject var albumVM: AlbumViewModel
+    @EnvironmentObject var playlistVM: PlaylistViewModel
+    @EnvironmentObject var audioPlayer: AudioPlayerManager
+    @Environment(\.presentationMode) var presentationMode
     
-    @Environment(\.presentationMode) var presentationMode // 声明页面环境参数: 展示状态
-    // 示例数据
-    @State var demoAlbum: NSArray = [
-        ["duration": "3:56", "name": "Billie Jean", "artists": "Michael Jackson"],
-        ["duration": "3:56", "name": "Earth Song", "artists": "Michael Jackson"],
-        ["duration": "3:56", "name": "Mirror", "artists": "Justin Timberlake"],
-        ["duration": "3:56", "name": "Remember the Time","artists": "Michael Jackson"],
-        ["duration": "3:56", "name": "Billie Jean", "artists": "Michael Jackson"],
-        ["duration": "3:56", "name": "Earth Song", "artists": "Michael Jackson"],
-        ["duration": "3:56", "name": "Mirror", "artists": "Justin Timberlake"],
-        ["duration": "3:56", "name": "Remember the Time","artists": "Michael Jackson"],
-        ["duration": "3:56", "name": "Billie Jean", "artists": "Michael Jackson"],
-        ["duration": "3:56", "name": "Earth Song", "artists": "Michael Jackson"],
-        ["duration": "3:56", "name": "Mirror", "artists": "Justin Timberlake"],
-        ["duration": "3:56", "name": "Remember the Time","artists": "Michael Jackson"]
-    ]
-    var isPlay: Bool = false
-    
+    let album: Album
+
     var body: some View {
         
         VStack {
             
             ScrollView {
                 // MARK: - 专辑信息部分
-                VStack(alignment: .center,spacing: 10) {
-                    Image("alb_1")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 256, height: 256)
-                        .cornerRadius(16)
-                    // 文字内容
-                    VStack(spacing: 1) {
-                        // 歌曲名
-                        Text("Who You Are Is Not Enough")
-                            .font(.customfont(.bold, fontSize: 23))
-                            .foregroundColor(Color.primaryText)
-                            .lineLimit(1)
-                        // 歌手名按钮
-                        Text("Athletics")
-                            .font(.customfont(.regular, fontSize: 20))
-                            .foregroundColor(Color.primaryText35)
-                            .lineLimit(1)
-                        // 曲风
-                        Text("Postrock · 2014 · Lossless")
-                            .font(.customfont(.bold, fontSize: 13))
-                            .lineLimit(1)
-                    }
-                }
+                AlbumDetailCell(album: album)
                 .frame(width: .screenWidth - 40)
                 
                 //MARK: - 播放按钮
@@ -100,10 +66,11 @@ struct AlbumDetailsView: View {
                 
                 // 专辑曲目部分
                 LazyVStack {
-                    ForEach(0..<demoAlbum.count, id: \.self) { index in
-                        let sObj = demoAlbum[index] as?NSDictionary ?? [:]
-                        
-//                        AlbumnSongRow(sObj: sObj, index: index, isPlay: false)
+                    ForEach(albumVM.currentAlbumSongs) { song in
+                        AlbumnSongRow(song: song)
+                            .environmentObject(audioPlayer)
+                            .environmentObject(playlistVM)
+                            .environmentObject(albumVM)
                     }
                 }
 
@@ -178,5 +145,118 @@ struct AlbumDetailsView: View {
 }
 
 #Preview {
-    AlbumDetailsView()
+    // 预览环境变量设置
+    let playlistVM = PlaylistViewModel()
+    let audioPlayer = AudioPlayerManager.shared
+    
+    let song1 = Song(
+        id: 1,
+        title: "Bulbel",
+        duration: 35,
+        filePath: "/Users/zhiye/Downloads/ENDER LILIES Quietus of the Knights Original Soundtrack/Bulbel.mp33",
+        coverPath: "/Users/zhiye/Downloads/enderlilies.jpg",
+        albumId: 87,
+        artistId: nil,
+        genreId: nil,
+        releaseDate: nil,
+        artistName: "Mili",
+        albumTitle: "Ender Lilies SoundTrack",
+        genreName: "Anime"
+    )
+    let song2 = Song(
+        id: 2,
+        title: "Compounding",
+        duration: 240,
+        filePath: "/Users/zhiye/Downloads/ENDER LILIES Quietus of the Knights Original Soundtrack/Compounding-Binary Haze Interactive,Mili.128.mp3",
+        coverPath: "/Users/zhiye/Downloads/enderlilies.jpg",
+        albumId: 87,
+        artistId: nil,
+        genreId: nil,
+        releaseDate: nil,
+        artistName: "Mili",
+        albumTitle: "Ender Lilies SoundTrack",
+        genreName: "Anime"
+    )
+    let song3 = Song(
+        id: 3,
+        title: "Lily",
+        duration: 240,
+        filePath: "/Users/zhiye/Downloads/ENDER LILIES Quietus of the Knights Original Soundtrack/Lily.mp3",
+        coverPath: "/Users/zhiye/Downloads/enderlilies.jpg",
+        albumId: 87,
+        artistId: nil,
+        genreId: nil,
+        releaseDate: nil,
+        artistName: "Mili",
+        albumTitle: "Ender Lilies SoundTrack",
+        genreName: "Anime"
+    )
+    let song4 = Song(
+        id: 4,
+        title: "Harmonious",
+        duration: 240,
+        filePath: "/Users/zhiye/Downloads/ENDER LILIES Quietus of the Knights Original Soundtrack/Harmonious.mp3",
+        coverPath: "/Users/zhiye/Downloads/enderlilies.jpg",
+        albumId: 87,
+        artistId: nil,
+        genreId: nil,
+        releaseDate: nil,
+        artistName: "Mili",
+        albumTitle: "Ender Lilies SoundTrack",
+        genreName: "Anime"
+    )
+    let song5 = Song(
+        id: 5,
+        title: "North",
+        duration: 240,
+        filePath: "/Users/zhiye/Downloads/ENDER LILIES Quietus of the Knights Original Soundtrack/North-Mili,Binary Haze Interactive.128.mp3",
+        coverPath: "/Users/zhiye/Downloads/enderlilies.jpg",
+        albumId: 87,
+        artistId: nil,
+        genreId: nil,
+        releaseDate: nil,
+        artistName: "Mili",
+        albumTitle: "Ender Lilies SoundTrack",
+        genreName: "Anime"
+    )
+    let song6 = Song(
+        id: 6,
+        title: "Rosart",
+        duration: 240,
+        filePath: "/Users/zhiye/Downloads/ENDER LILIES Quietus of the Knights Original Soundtrack/Rosary - Intro-Binary Haze Interactive,Mili.128.mp3",
+        coverPath: "/Users/zhiye/Downloads/enderlilies.jpg",
+        albumId: 87,
+        artistId: nil,
+        genreId: nil,
+        releaseDate: nil,
+        artistName: "Mili",
+        albumTitle: "Ender Lilies SoundTrack",
+        genreName: "Anime"
+    )
+    // 声明歌曲数组
+    let enderLiliesAlbum = [song1, song2, song3, song4, song5, song6]
+    
+    // 创建专辑实例
+    let album = Album(
+        id: 87,
+        title: "Ender Lilies SoundTrack",
+        artistId: 87,
+        releaseDate: nil,
+        coverPath: "/Users/zhiye/Downloads/enderlilies.jpg",
+        artistName: "Mili",
+        songs: enderLiliesAlbum
+    )
+
+
+    // 初始化 AlbumViewModel 并手动设置数据
+    let albumVM = AlbumViewModel(
+        albums: [album],
+        currentAlbumSongs: enderLiliesAlbum,
+        currentAlbumId: 87
+    )
+    
+    return AlbumDetailsView(album: album)
+        .environmentObject(audioPlayer)
+        .environmentObject(albumVM)
+        .environmentObject(playlistVM)
 }

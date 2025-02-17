@@ -346,3 +346,8 @@ extension SongViewModel {
 }
 
 // MARK: - 统一播放协议
+extension SongViewModel: PlayableSource {
+    var queue: [Song] {
+        self.songs
+    }
+}

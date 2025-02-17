@@ -13,13 +13,14 @@ struct SongsCell: View {
     // 添加 PlaylistViewModel 以支持添加到歌单功能
     @EnvironmentObject var playlistVM: PlaylistViewModel
     @EnvironmentObject var audioPlayer: AudioPlayerManager
+    @EnvironmentObject var songVM: SongViewModel
     
     var body: some View {
         Button(action: {
             // 设置播放队列并播放当前歌曲
             print("你按下了SongCell:调制文字，设置播放队列并播放当前你按下的歌曲")
             DispatchQueue.main.async {
-                audioPlayer.setupQueue(tracks: playlistVM.currentPlaylistSongs, startIndex: playlistVM.currentPlaylistSongs.firstIndex(of: sObj) ?? 0)
+                audioPlayer.setupQueue(tracks: songVM.songs, startIndex: songVM.songs.firstIndex(of: sObj) ?? 0)
                 audioPlayer.playPause()
             }
         }) {
@@ -75,7 +76,7 @@ struct SongsCell: View {
                 }
                 
                 // 其他操作
-                Button("删除") {
+                Button("Delete From Library") {
                     // 调用删除逻辑
                 }
             }
@@ -131,6 +132,8 @@ private struct MenuTextBtn: View {
         albumTitle: "Native",
         genreName: "Pop"
     )
+    let songVM = SongViewModel(shouldLoadFromDatabase: false)
+    songVM.songs = [song]
     let a_vm = AudioPlayerManager.shared
     let vm = PlaylistViewModel()
     vm.playlists = [
@@ -141,5 +144,6 @@ private struct MenuTextBtn: View {
     return SongsCell(sObj: song)
         .environmentObject(vm)
         .environmentObject(a_vm)
+        .environmentObject(songVM)
         //.background(Color.bg)
 }

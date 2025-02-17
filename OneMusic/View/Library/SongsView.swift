@@ -14,21 +14,6 @@ struct SongsView: View {
     @EnvironmentObject var audioPlayer: AudioPlayerManager // 绑定播放器
     @State var searchText: String = "" // 需要搜索的歌曲名字
     
-//    let songExample = Song(
-//        id: 1,
-//        title: "Example Song",
-//        duration: 234,
-//        filePath: "/path/to/song.mp3",
-//        coverPath: Bundle.main.path(forResource: "preview_cover_1", ofType: "jpg"),
-//        albumId: nil,
-//        artistId: nil,
-//        genreId: nil,
-//        releaseDate: nil,
-//        artistName: "EGOIST",
-//        albumTitle: "Native",
-//        genreName: "Pop"
-//    )
-
     var body: some View {
         NavigationStack {
             VStack{

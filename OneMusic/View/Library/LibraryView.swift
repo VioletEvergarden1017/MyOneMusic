@@ -139,7 +139,7 @@ struct LibraryView: View {
                             ForEach (0..<allAlbum.count, id: \.self) { index in
                                 let sObj = allAlbum[index] as? NSDictionary ?? [:]
                                 NavigationLink {
-                                    AlbumDetailsView()
+                                    //AlbumDetailsView()
                                 } label: {
                                     RecentlyAddCell(sObj: sObj)
                                 }
