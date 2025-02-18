@@ -9,9 +9,9 @@ import SwiftUI
 
 struct SongsView: View {
     @Environment(\.presentationMode) var presentationMode // 声明页面环境参数
-    @EnvironmentObject private var viewModel: SongViewModel // ViewModel
-    @EnvironmentObject var playlistVM: PlaylistViewModel
-    @EnvironmentObject var audioPlayer: AudioPlayerManager // 绑定播放器
+    @EnvironmentObject private var songVM: SongViewModel // ViewModel
+    @EnvironmentObject private var playlistVM: PlaylistViewModel
+    @EnvironmentObject private var audioPlayer: AudioPlayerManager // 绑定播放器
     @State var searchText: String = "" // 需要搜索的歌曲名字
     
     var body: some View {
@@ -23,7 +23,7 @@ struct SongsView: View {
                 ScrollView {
                     VStack {
                         // 确保使用 viewModel.songs 中的数据
-                        ForEach(viewModel.songs) { song in
+                        ForEach(songVM.songs) { song in
                             SongsCell(sObj: song)
                                 .environmentObject(audioPlayer) // 传递播放器
                                 .environmentObject(playlistVM)
@@ -46,6 +46,21 @@ struct SongsView: View {
             .background(Color.bg)
             .ignoresSafeArea()
         }
+        // MARK: - 实现文件上传至资料库
+        .fileImporter(
+            isPresented: $songVM.isShowingFilePicker,
+            allowedContentTypes: [.audio],
+            allowsMultipleSelection: false
+        ) { result in
+            switch result {
+            case .success(let urls):
+                if let url = urls.first {
+                    songVM.uploadLocalSong(fileURL: url)
+                }
+            case .failure(let error):
+                songVM.errorMessage = "文件选择失败: \(error.localizedDescription)"
+            }
+        }
         // 隐藏系统自带的返回按钮(会使得系统侧滑逻辑实效，需要自定义新的侧滑逻辑)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: backBtn) // 实现自定义返回
@@ -55,16 +70,66 @@ struct SongsView: View {
                     .font(.customfont(.bold, fontSize: 17))
                     .foregroundColor(Color.primaryText80)
             }
+            
+            // 添加歌曲至资料库按钮，代码更新时间2.18
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {
+                    songVM.isShowingFilePicker = true
+                }) {
+                    Image(systemName: "plus")
+                        .foregroundColor(.primaryText80)
+                }
+            }
         }
-        .onAppear {
-            print("SongsView appeared with \(viewModel.songs.count) songs")
-            print("环境对象状态：",
-                  "playlistVM: \(playlistVM)",
-                  "audioPlayer: \(audioPlayer)")
+        // 在 SongsView 中添加一个表单视图
+        .sheet(isPresented: $songVM.isShowingFilePicker) {
+            VStack {
+                Text("Upload Song to Library")
+                    .font(.title)
+                    .padding()
+                
+                TextField("Title", text: $songVM.newSongTitle)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                
+                TextField("Artist", text: $songVM.newSongArtist)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                
+                TextField("Album", text: $songVM.newSongAlbum)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                
+                Button("Select cover for song") {
+                    // 打开图片选择器
+                }
+                .padding()
+                
+                Button("Upload") {
+                    // 触发文件选择器
+                    songVM.isShowingFilePicker = true
+                }
+                .padding()
+            }
+            .padding()
         }
-        .onDisappear {
-            print("SongsView disappeared")
+        // 给出错误信息
+        .alert("Error", isPresented: .constant(songVM.errorMessage != nil)) {
+            Button("Confirm", role: .cancel) {
+                songVM.errorMessage = nil
+            }
+        } message: {
+            Text(songVM.errorMessage ?? "")
         }
+//        .onAppear {
+//            print("SongsView appeared with \(viewModel.songs.count) songs")
+//            print("环境对象状态：",
+//                  "playlistVM: \(playlistVM)",
+//                  "audioPlayer: \(audioPlayer)")
+//        }
+//        .onDisappear {
+//            print("SongsView disappeared")
+//        }
 
     }
     // MARK: - 返回按钮
@@ -139,7 +204,7 @@ struct MySearchBar: View {
     let audioPlayer = AudioPlayerManager.shared
     
     // 创建真实测试数据
-   let song1 = Song(
+    let song1 = Song(
        id: 1,
        title: "All Alone With You",
        duration: 35,
@@ -153,8 +218,7 @@ struct MySearchBar: View {
        albumTitle: "Extra Terrestrial Biological Entities",
        genreName: "Anime"
    )
-       
-   let song2 = Song(
+    let song2 = Song(
        id: 2,
        title: "Bible",
        duration: 240,
@@ -168,9 +232,65 @@ struct MySearchBar: View {
        albumTitle: "Sample Album",
        genreName: "Anime"
    )
+    let song3 = Song(
+        id: 3,
+        title: "Lily",
+        duration: 240,
+        filePath: "/Users/zhiye/Downloads/ENDER LILIES Quietus of the Knights Original Soundtrack/Lily.mp3",
+        coverPath: "/Users/zhiye/Downloads/enderlilies.jpg",
+        albumId: 87,
+        artistId: nil,
+        genreId: nil,
+        releaseDate: nil,
+        artistName: "Mili",
+        albumTitle: "Ender Lilies SoundTrack",
+        genreName: "Anime"
+    )
+    let song4 = Song(
+        id: 4,
+        title: "Harmonious",
+        duration: 240,
+        filePath: "/Users/zhiye/Downloads/ENDER LILIES Quietus of the Knights Original Soundtrack/Harmonious.mp3",
+        coverPath: "/Users/zhiye/Downloads/enderlilies.jpg",
+        albumId: 87,
+        artistId: nil,
+        genreId: nil,
+        releaseDate: nil,
+        artistName: "Mili",
+        albumTitle: "Ender Lilies SoundTrack",
+        genreName: "Anime"
+    )
+    let song5 = Song(
+        id: 5,
+        title: "North",
+        duration: 240,
+        filePath: "/Users/zhiye/Downloads/ENDER LILIES Quietus of the Knights Original Soundtrack/North-Mili,Binary Haze Interactive.128.mp3",
+        coverPath: "/Users/zhiye/Downloads/enderlilies.jpg",
+        albumId: 87,
+        artistId: nil,
+        genreId: nil,
+        releaseDate: nil,
+        artistName: "Mili",
+        albumTitle: "Ender Lilies SoundTrack",
+        genreName: "Anime"
+    )
+    let song6 = Song(
+        id: 6,
+        title: "Rosary",
+        duration: 240,
+        filePath: "/Users/zhiye/Downloads/ENDER LILIES Quietus of the Knights Original Soundtrack/Rosary - Intro-Binary Haze Interactive,Mili.128.mp3",
+        coverPath: "/Users/zhiye/Downloads/enderlilies.jpg",
+        albumId: 87,
+        artistId: nil,
+        genreId: nil,
+        releaseDate: nil,
+        artistName: "Mili",
+        albumTitle: "Ender Lilies SoundTrack",
+        genreName: "Anime"
+    )
        
     // MARK: - 强制刷新数据
-    songVM.songs = [song1, song2]
+    songVM.songs = [song1, song2, song3, song4, song5, song6]
     songVM.shouldLoadFromDatabase = false // 禁止从数据库加载数据
     
     playlistVM.playlists = [

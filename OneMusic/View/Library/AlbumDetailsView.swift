@@ -9,9 +9,9 @@ import SwiftUI
 
 struct AlbumDetailsView: View {
     // MARK: - 页面环境变量
-    @EnvironmentObject var albumVM: AlbumViewModel
-    @EnvironmentObject var playlistVM: PlaylistViewModel
-    @EnvironmentObject var audioPlayer: AudioPlayerManager
+    @EnvironmentObject private var albumVM: AlbumViewModel
+    @EnvironmentObject private var playlistVM: PlaylistViewModel
+    @EnvironmentObject private var audioPlayer: AudioPlayerManager
     @Environment(\.presentationMode) var presentationMode
     
     let album: Album

@@ -35,7 +35,7 @@ struct PlaylistsView: View {
                                 .environmentObject(audioPlayer)
                                 .onAppear {
                                     print("调试信息，进入了歌单详细页")
-                                    // 添加了这段代码，当进入详细页面的时候将当前歌单的歌曲赋值给currentPlaylistSongs
+                                    //添加了这段代码，当进入详细页面的时候将当前歌单的歌曲赋值给currentPlaylistSongs
                                     playlistVM.currentPlaylistSongs = playlist.songs
                                 }
                         } label: {
@@ -255,9 +255,11 @@ private struct PlaylistSortMenu: View {
     let testSongs = [song1, song2, song3, song4, song5, song6]
     let testPlaylist = Playlist(id: 1, name: "我的最爱", songs: testSongs, coverPath: "/Users/zhiye/Downloads/preview_cover_6.jpg")
     let emptyPlaylist = Playlist(id: 2, name: "最近收藏", songs: [song4, song5, song6], coverPath: "/Users/zhiye/Downloads/preview_cover_5.jpg")
-    
+    let playlist3 = Playlist(id: 3, name: "后摇滚", songs: [song4, song6], coverPath: "/Users/zhiye/Downloads/032981110B28104181EAF2562E102574.png")
+    let playlist4 = Playlist(id: 4, name: "睡前轻音乐", songs: [song5, song6], coverPath: "/Users/zhiye/Downloads/1400x1400bb.jpg")
+    let playlist5 = Playlist(id: 5, name: "杂", songs: [song4], coverPath: "/Users/zhiye/Downloads/preview_cover_4.jpg")
     // 初始化 PlaylistViewModel 并手动设置数据
-    let playlistVM = PlaylistViewModel(playlists: [testPlaylist, emptyPlaylist], currentPlaylistSongs: testSongs, currentPlaylistId: testPlaylist.id)
+    let playlistVM = PlaylistViewModel(playlists: [testPlaylist, emptyPlaylist, playlist3, playlist4, playlist5], currentPlaylistSongs: testSongs, currentPlaylistId: testPlaylist.id)
     
     return PlaylistsView()
         .environmentObject(playlistVM)

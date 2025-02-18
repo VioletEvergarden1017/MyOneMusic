@@ -67,10 +67,10 @@ struct SongsCell: View {
             // 长按菜单
             .contextMenu {
                 // 添加到歌单菜单
-                Menu("添加到歌单") {
+                Menu("Add to Playlist") {
                     ForEach(playlistVM.playlists) { playlist in
                         Button(playlist.name) {
-                            playlistVM.addCurrentSongToPlaylist(songId: sObj.id)
+                            playlistVM.addSongToPlaylist(songId: sObj.id, playlistId: playlist.id)
                         }
                     }
                 }
@@ -78,6 +78,9 @@ struct SongsCell: View {
                 // 其他操作
                 Button("Delete From Library") {
                     // 调用删除逻辑
+                    if let index = songVM.songs.firstIndex(where:{ $0.id == sObj.id }) {
+                        songVM.deleteSong(at: IndexSet(integer: index))
+                    }
                 }
             }
         }

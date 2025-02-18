@@ -14,6 +14,8 @@ class AlbumViewModel: ObservableObject {
     @Published var currentAlbumId: Int64?    // 当前专辑ID
     
     
+    // 从数据库初始化的主初始化方法
+    
     
     // MARK: - 从数据库当中加载数据
     func loadAlbums() {
