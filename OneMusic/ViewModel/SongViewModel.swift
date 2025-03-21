@@ -26,6 +26,8 @@ class SongViewModel: ObservableObject {
     @Published var newSongAlbum: String = "" // 新歌曲专辑
     @Published var newSongCoverImage: UIImage? = nil // 新歌曲封面
     
+    // 为实机预览增加自动刷新标志位为了
+    @Published var shouldAutoRefresh: Bool = false
     let pageSize: Int = 20 // 每页显示的歌曲数量
     private var cancellables = Set<AnyCancellable>() // Combine 订阅管理
     
@@ -43,6 +45,7 @@ class SongViewModel: ObservableObject {
     
     // MARK: - 加载歌曲
     func loadSongs(page: Int = 1) {
+        //guard shouldAutoRefresh else { return }
         // 修改判断逻辑
         guard shouldLoadFromDatabase else {
             print("预览模式跳过数据库加载")
@@ -79,6 +82,15 @@ class SongViewModel: ObservableObject {
                 }
             }
         }
+        
+        DispatchQueue.main.async {
+            // 新增自动刷新触发
+            if self.shouldAutoRefresh {
+                self.objectWillChange.send()
+                self.shouldAutoRefresh = false
+            }
+        }
+        
     }
     
     // MARK: - 加载下一页
@@ -262,34 +274,34 @@ class SongViewModel: ObservableObject {
 }
 
 // MARK: - 解析元数据拓展
-extension SongViewModel {
-    
-    // 解析 MP3 文件的元数据
-    func parseMP3Metadata(fileURL: URL) -> (duration: Int, artist: String?, album: String?) {
-        let asset = AVAsset(url: fileURL)
-        var duration = 0
-        var artist: String? = nil
-        var album: String? = nil
-        
-        // 获取时长
-        duration = Int(CMTimeGetSeconds(asset.duration))
-        
-        // 获取元数据
-        let metadata = asset.metadata
-        for item in metadata {
-            switch item.commonKey?.rawValue {
-            case "artist":
-                artist = item.stringValue
-            case "albumName":
-                album = item.stringValue
-            default:
-                break
-            }
-        }
-        
-        return (duration, artist, album)
-    }
-}
+//extension SongViewModel {
+//
+//    // 解析 MP3 文件的元数据
+//    func parseMP3Metadata(fileURL: URL) -> (duration: Int, artist: String?, album: String?) {
+//        let asset = AVAsset(url: fileURL)
+//        var duration = 0
+//        var artist: String? = nil
+//        var album: String? = nil
+//
+//        // 获取时长
+//        duration = Int(CMTimeGetSeconds(asset.duration))
+//
+//        // 获取元数据
+//        let metadata = asset.metadata
+//        for item in metadata {
+//            switch item.commonKey?.rawValue {
+//            case "artist":
+//                artist = item.stringValue
+//            case "albumName":
+//                album = item.stringValue
+//            default:
+//                break
+//            }
+//        }
+//
+//        return (duration, artist, album)
+//    }
+//}
 
 
 // MARK: - 插入测试数据
@@ -351,3 +363,112 @@ extension SongViewModel: PlayableSource {
         self.songs
     }
 }
+
+// MARK: - 实现文件夹读入数据(实机演示拓展)
+extension SongViewModel {
+
+    // MARK: - 辅助方法
+    private func findCoverInDirectory(url: URL, extensions: [String]) -> String? {
+        let preferredNames = ["cover", "folder", "album"]
+        for name in preferredNames {
+            for ext in extensions {
+                let coverURL = url.appendingPathComponent("\(name).\(ext)")
+                if FileManager.default.fileExists(atPath: coverURL.path) {
+                    return coverURL.path
+                }
+            }
+        }
+        return nil
+    }
+    
+    
+    
+    // 增强版元数据解析
+    private func parseMP3Metadata(fileURL: URL) -> (duration: Int, title: String?, artist: String?, album: String?, genre: String?, releaseDate: Date?,  coverPath: String?) {
+        let asset = AVAsset(url: fileURL)
+        var duration = Int(CMTimeGetSeconds(asset.duration))
+        var title: String? = nil
+        var artist: String? = nil
+        var album: String? = nil
+        var releaseDate: Date?
+        var genre: String? = nil
+        
+        var coverPath: String? = nil
+        
+        // 解析文本元数据
+        for item in asset.metadata {
+            guard let key = item.commonKey?.rawValue else { continue }
+            
+            switch key {
+            case "title":
+                title = item.stringValue
+            case "artist":
+                artist = item.stringValue
+            case "albumName":
+                album = item.stringValue
+            case "type":
+                genre = item.stringValue
+            case "creationDate":
+                        // 尝试解析日期（格式如 "2023-01-01"）
+                        if let dateString = item.stringValue {
+                            let formatter = DateFormatter()
+                            formatter.dateFormat = "yyyy-MM-dd"
+                            releaseDate = formatter.date(from: dateString)
+                        }
+            default:
+                break
+            }
+        }
+        
+        // 解析专辑封面
+        if let artworkData = asset.metadata.first(where: { $0.commonKey?.rawValue == "artwork" })?.dataValue,
+           let image = UIImage(data: artworkData) {
+            let fileName = "\(UUID().uuidString).jpg"
+            let coverURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+                .appendingPathComponent(fileName)
+            
+            do {
+                try image.jpegData(compressionQuality: 0.8)?.write(to: coverURL)
+                coverPath = coverURL.path
+            } catch {
+                print("封面保存失败: \(error)")
+            }
+        }
+        
+        return (duration, title, artist, album, genre, releaseDate, coverPath)
+    }
+    
+}
+
+
+
+// 定义 UserDefaults 的 Key
+extension UserDefaults {
+    static let hasImportedMusicLibraryKey = "hasImportedMusicLibrary"
+}
+
+extension SongViewModel {
+    func resetLibraryImportStatus() {
+        UserDefaults.standard.set(false, forKey: UserDefaults.hasImportedMusicLibraryKey)
+        print("导入状态已重置")
+    }
+}
+
+// SongViewModel.swift 新增扩展方法
+extension SongViewModel {
+    func getDefaultCover(for album: String) -> String? {
+        let libraryURL = Bundle.main.resourceURL!
+            .appendingPathComponent("OneMusicLibrary")
+            .appendingPathComponent(album)
+        
+        let coverExtensions = ["jpg", "jpeg", "png"]
+        for ext in coverExtensions {
+            let coverURL = libraryURL.appendingPathComponent("cover.\(ext)")
+            if FileManager.default.fileExists(atPath: coverURL.path) {
+                return coverURL.path
+            }
+        }
+        return nil
+    }
+}
+

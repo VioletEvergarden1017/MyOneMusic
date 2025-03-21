@@ -17,7 +17,7 @@ class DatabaseManager {
         let fileURL = try! FileManager.default
             .url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
             .appendingPathComponent("musicDB.sqlite")
-        //print("\(fileURL)")
+        print("\(fileURL)")
         if sqlite3_open(fileURL.path, &db) != SQLITE_OK {
             print("Error opening database")
             return
@@ -63,7 +63,7 @@ class DatabaseManager {
             album_id INTEGER,
             artist_id INTEGER,
             genre_id INTEGER,
-            release_date DATE,
+            release_date REAL,
             FOREIGN KEY (album_id) REFERENCES albums(id),
             FOREIGN KEY (artist_id) REFERENCES artists(id),
             FOREIGN KEY (genre_id) REFERENCES genres(id)
@@ -73,8 +73,8 @@ class DatabaseManager {
         let createPlaylistsTable = """
         CREATE TABLE IF NOT EXISTS playlists (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL UNIQUE
-            cover_path
+            name TEXT NOT NULL UNIQUE,
+            cover_path TEXT
         );
         """
         // 创建播放列表与歌曲的关联表
@@ -221,7 +221,7 @@ extension DatabaseManager {
                     title: albumTitle,
                     artistId: artistId,
                     releaseDate: song.releaseDate,
-                    coverPath: song.coverPath
+                    coverPath: song.coverPath ?? getDefaultCoverPath(albumTitle: albumTitle) // 新增方法
                 )
             }
             
@@ -274,6 +274,22 @@ extension DatabaseManager {
             sqlite3_exec(db, "ROLLBACK", nil, nil, nil)
             throw error
         }
+    }
+    
+    // 新增帮助方法
+    private func getDefaultCoverPath(albumTitle: String) -> String? {
+        let libraryURL = Bundle.main.resourceURL!
+            .appendingPathComponent("OneMusicLibrary")
+            .appendingPathComponent(albumTitle)
+        
+        let coverExtensions = ["jpg", "jpeg", "png"]
+        for ext in coverExtensions {
+            let coverURL = libraryURL.appendingPathComponent("cover.\(ext)")
+            if FileManager.default.fileExists(atPath: coverURL.path) {
+                return coverURL.path
+            }
+        }
+        return nil
     }
     
     // MARK: - 查询所有歌曲（带关联信息）
@@ -1219,3 +1235,4 @@ extension DatabaseManager {
         }
     }
 }
+

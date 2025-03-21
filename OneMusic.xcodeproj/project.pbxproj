@@ -51,19 +51,6 @@
 		95B41AD72D604EF5006460EA /* MusicPillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B41AD62D604EF5006460EA /* MusicPillView.swift */; };
 		95B41AD92D607697006460EA /* PlaylistViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B41AD82D607697006460EA /* PlaylistViewModel.swift */; };
 		95B41ADB2D60A701006460EA /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B41ADA2D60A701006460EA /* PreviewData.swift */; };
-		95B41AE22D60A73B006460EA /* Rosary - Intro-Binary Haze Interactive,Mili.128.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 95B41AE12D60A73B006460EA /* Rosary - Intro-Binary Haze Interactive,Mili.128.mp3 */; };
-		95B41AE32D60A73B006460EA /* Bulbel.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 95B41ADC2D60A73B006460EA /* Bulbel.mp3 */; };
-		95B41AE42D60A73B006460EA /* Compounding-Binary Haze Interactive,Mili.128.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 95B41ADD2D60A73B006460EA /* Compounding-Binary Haze Interactive,Mili.128.mp3 */; };
-		95B41AE52D60A73B006460EA /* Harmonious.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 95B41ADE2D60A73B006460EA /* Harmonious.mp3 */; };
-		95B41AE62D60A73B006460EA /* Lily.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 95B41ADF2D60A73B006460EA /* Lily.mp3 */; };
-		95B41AE72D60A73B006460EA /* North-Mili,Binary Haze Interactive.128.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 95B41AE02D60A73B006460EA /* North-Mili,Binary Haze Interactive.128.mp3 */; };
-		95B41AF12D60A77E006460EA /* I.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 95B41AEA2D60A77E006460EA /* I.mp3 */; };
-		95B41AF22D60A77E006460EA /* IV.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 95B41AEF2D60A77E006460EA /* IV.mp3 */; };
-		95B41AF32D60A77E006460EA /* III.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 95B41AED2D60A77E006460EA /* III.mp3 */; };
-		95B41AF42D60A77E006460EA /* II (Find Yourself).mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 95B41AEC2D60A77E006460EA /* II (Find Yourself).mp3 */; };
-		95B41AF52D60A77E006460EA /* III (Find Yourself) .mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 95B41AEE2D60A77E006460EA /* III (Find Yourself) .mp3 */; };
-		95B41AF62D60A77E006460EA /* II.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 95B41AEB2D60A77E006460EA /* II.mp3 */; };
-		95B41AF72D60A77E006460EA /* WhoYouAreIsNotEnough.png in Resources */ = {isa = PBXBuildFile; fileRef = 95B41AF02D60A77E006460EA /* WhoYouAreIsNotEnough.png */; };
 		95B41AFF2D61A5C1006460EA /* preview_cover_1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 95B41AFE2D61A5C1006460EA /* preview_cover_1.jpg */; };
 		95B41B012D61A621006460EA /* preview_cover_2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 95B41B002D61A621006460EA /* preview_cover_2.jpg */; };
 		95B41B032D61A640006460EA /* preview_cover_3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 95B41B022D61A640006460EA /* preview_cover_3.jpg */; };
@@ -103,7 +90,7 @@
 		956E55DF2D5E5D1D00D8B768 /* SongViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongViewModel.swift; sourceTree = "<group>"; };
 		956E55E32D5E63A700D8B768 /* All Alone With You-Egoist.flac */ = {isa = PBXFileReference; lastKnownFileType = file; path = "All Alone With You-Egoist.flac"; sourceTree = "<group>"; };
 		956E55E52D5E63B500D8B768 /* all.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = all.jpg; sourceTree = "<group>"; };
-		95A72A402D5A3F0E007CBE8B /* OneMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OneMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		95A72A402D5A3F0E007CBE8B /* OneMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = OneMusic.app; path = "/Users/zhiye/Repositories/OneMusic/build/Debug-iphoneos/OneMusic.app"; sourceTree = "<absolute>"; };
 		95A72A512D5A3F3A007CBE8B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		95A72A532D5A3F3A007CBE8B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		95A72A552D5A3F3A007CBE8B /* OneMusicApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneMusicApp.swift; sourceTree = "<group>"; };
@@ -136,19 +123,6 @@
 		95B41AD62D604EF5006460EA /* MusicPillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPillView.swift; sourceTree = "<group>"; };
 		95B41AD82D607697006460EA /* PlaylistViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistViewModel.swift; sourceTree = "<group>"; };
 		95B41ADA2D60A701006460EA /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
-		95B41ADC2D60A73B006460EA /* Bulbel.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Bulbel.mp3; sourceTree = "<group>"; };
-		95B41ADD2D60A73B006460EA /* Compounding-Binary Haze Interactive,Mili.128.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Compounding-Binary Haze Interactive,Mili.128.mp3"; sourceTree = "<group>"; };
-		95B41ADE2D60A73B006460EA /* Harmonious.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Harmonious.mp3; sourceTree = "<group>"; };
-		95B41ADF2D60A73B006460EA /* Lily.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Lily.mp3; sourceTree = "<group>"; };
-		95B41AE02D60A73B006460EA /* North-Mili,Binary Haze Interactive.128.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "North-Mili,Binary Haze Interactive.128.mp3"; sourceTree = "<group>"; };
-		95B41AE12D60A73B006460EA /* Rosary - Intro-Binary Haze Interactive,Mili.128.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Rosary - Intro-Binary Haze Interactive,Mili.128.mp3"; sourceTree = "<group>"; };
-		95B41AEA2D60A77E006460EA /* I.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = I.mp3; sourceTree = "<group>"; };
-		95B41AEB2D60A77E006460EA /* II.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = II.mp3; sourceTree = "<group>"; };
-		95B41AEC2D60A77E006460EA /* II (Find Yourself).mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "II (Find Yourself).mp3"; sourceTree = "<group>"; };
-		95B41AED2D60A77E006460EA /* III.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = III.mp3; sourceTree = "<group>"; };
-		95B41AEE2D60A77E006460EA /* III (Find Yourself) .mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "III (Find Yourself) .mp3"; sourceTree = "<group>"; };
-		95B41AEF2D60A77E006460EA /* IV.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = IV.mp3; sourceTree = "<group>"; };
-		95B41AF02D60A77E006460EA /* WhoYouAreIsNotEnough.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = WhoYouAreIsNotEnough.png; sourceTree = "<group>"; };
 		95B41AFE2D61A5C1006460EA /* preview_cover_1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = preview_cover_1.jpg; sourceTree = "<group>"; };
 		95B41B002D61A621006460EA /* preview_cover_2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = preview_cover_2.jpg; sourceTree = "<group>"; };
 		95B41B022D61A640006460EA /* preview_cover_3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = preview_cover_3.jpg; sourceTree = "<group>"; };
@@ -174,6 +148,15 @@
 		95D289BB2D5DE7CD0013A651 /* ArtistCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistCell.swift; sourceTree = "<group>"; };
 		95D289BD2D5DF5150013A651 /* ALL.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ALL.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		95DFB37A2D8D6EC200D99DB3 /* OneMusicLibrary */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			name = OneMusicLibrary;
+			path = /Users/zhiye/Documents/OneMusicLibrary;
+			sourceTree = "<absolute>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		95A72A3D2D5A3F0E007CBE8B /* Frameworks */ = {
@@ -226,16 +209,8 @@
 			isa = PBXGroup;
 			children = (
 				95A72A562D5A3F3A007CBE8B /* OneMusic */,
-				95A72A412D5A3F0E007CBE8B /* Products */,
+				95DFB37A2D8D6EC200D99DB3 /* OneMusicLibrary */,
 			);
-			sourceTree = "<group>";
-		};
-		95A72A412D5A3F0E007CBE8B /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				95A72A402D5A3F0E007CBE8B /* OneMusic.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		95A72A522D5A3F3A007CBE8B /* Preview Content */ = {
@@ -253,7 +228,6 @@
 		95A72A562D5A3F3A007CBE8B /* OneMusic */ = {
 			isa = PBXGroup;
 			children = (
-				95B41AC52D5F999B006460EA /* OneModel */,
 				95A72A702D5A5021007CBE8B /* Extension */,
 				95A72A6B2D5A48FF007CBE8B /* View */,
 				95A72A6A2D5A48D3007CBE8B /* ViewModel */,
@@ -376,28 +350,9 @@
 			path = Extension;
 			sourceTree = "<group>";
 		};
-		95B41AC52D5F999B006460EA /* OneModel */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = OneModel;
-			sourceTree = "<group>";
-		};
 		95B41AFC2D61A57C006460EA /* Mp3 */ = {
 			isa = PBXGroup;
 			children = (
-				95B41AEB2D60A77E006460EA /* II.mp3 */,
-				95B41AEA2D60A77E006460EA /* I.mp3 */,
-				95B41AEF2D60A77E006460EA /* IV.mp3 */,
-				95B41AEC2D60A77E006460EA /* II (Find Yourself).mp3 */,
-				95B41AED2D60A77E006460EA /* III.mp3 */,
-				95B41AEE2D60A77E006460EA /* III (Find Yourself) .mp3 */,
-				95B41ADC2D60A73B006460EA /* Bulbel.mp3 */,
-				95B41ADD2D60A73B006460EA /* Compounding-Binary Haze Interactive,Mili.128.mp3 */,
-				95B41ADE2D60A73B006460EA /* Harmonious.mp3 */,
-				95B41ADF2D60A73B006460EA /* Lily.mp3 */,
-				95B41AE02D60A73B006460EA /* North-Mili,Binary Haze Interactive.128.mp3 */,
-				95B41AE12D60A73B006460EA /* Rosary - Intro-Binary Haze Interactive,Mili.128.mp3 */,
 				95B41B0C2D6242DE006460EA /* Untitled.md */,
 			);
 			path = Mp3;
@@ -413,7 +368,6 @@
 				95B41B042D61A78B006460EA /* preview_cover_4.jpg */,
 				95B41B052D61A78B006460EA /* preview_cover_5.jpg */,
 				95B41B062D61A78B006460EA /* preview_cover_6.jpg */,
-				95B41AF02D60A77E006460EA /* WhoYouAreIsNotEnough.png */,
 			);
 			path = cover;
 			sourceTree = "<group>";
@@ -450,6 +404,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				95DFB37A2D8D6EC200D99DB3 /* OneMusicLibrary */,
 			);
 			name = OneMusic;
 			packageProductDependencies = (
@@ -490,7 +447,7 @@
 				956E55DA2D5E522F00D8B768 /* XCLocalSwiftPackageReference "../../Downloads/SQLite.swift-master" */,
 			);
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 95A72A412D5A3F0E007CBE8B /* Products */;
+			productRefGroup = 95A72A372D5A3F0E007CBE8B;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -514,24 +471,11 @@
 				95A72A632D5A400E007CBE8B /* NotoSansSC-Regular.ttf in Resources */,
 				95B41B032D61A640006460EA /* preview_cover_3.jpg in Resources */,
 				95D289BE2D5DF5150013A651 /* ALL.mp3 in Resources */,
-				95B41AE22D60A73B006460EA /* Rosary - Intro-Binary Haze Interactive,Mili.128.mp3 in Resources */,
-				95B41AE32D60A73B006460EA /* Bulbel.mp3 in Resources */,
-				95B41AE42D60A73B006460EA /* Compounding-Binary Haze Interactive,Mili.128.mp3 in Resources */,
-				95B41AE52D60A73B006460EA /* Harmonious.mp3 in Resources */,
 				95B41B012D61A621006460EA /* preview_cover_2.jpg in Resources */,
-				95B41AE62D60A73B006460EA /* Lily.mp3 in Resources */,
-				95B41AF12D60A77E006460EA /* I.mp3 in Resources */,
-				95B41AF22D60A77E006460EA /* IV.mp3 in Resources */,
 				95B41AFF2D61A5C1006460EA /* preview_cover_1.jpg in Resources */,
-				95B41AF32D60A77E006460EA /* III.mp3 in Resources */,
-				95B41AF42D60A77E006460EA /* II (Find Yourself).mp3 in Resources */,
-				95B41AF52D60A77E006460EA /* III (Find Yourself) .mp3 in Resources */,
 				95B41B072D61A78B006460EA /* preview_cover_5.jpg in Resources */,
 				95B41B082D61A78B006460EA /* preview_cover_6.jpg in Resources */,
 				95B41B092D61A78B006460EA /* preview_cover_4.jpg in Resources */,
-				95B41AF62D60A77E006460EA /* II.mp3 in Resources */,
-				95B41AF72D60A77E006460EA /* WhoYouAreIsNotEnough.png in Resources */,
-				95B41AE72D60A73B006460EA /* North-Mili,Binary Haze Interactive.128.mp3 in Resources */,
 				956E55E42D5E63A700D8B768 /* All Alone With You-Egoist.flac in Resources */,
 				95A72A642D5A400E007CBE8B /* NotoSansSC-Black.ttf in Resources */,
 				95D289B12D5DBEB30013A651 /* wave.gif in Resources */,
